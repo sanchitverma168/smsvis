@@ -1,12 +1,13 @@
 import 'package:Smsvis/providers/quicksendprovider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/utils/validateform.dart';
 import 'package:Smsvis/widgets/quicksend/displayContentdata.dart';
 import 'package:Smsvis/widgets/quicksend/error.dart';
 import 'package:Smsvis/widgets/quicksend/importContacts.dart';
-import 'package:Smsvis/widgets/quicksend/inputchip.dart';
 import 'package:Smsvis/widgets/quicksend/selectsenderid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,20 +42,17 @@ class _MessageSendPageState extends State<MessageSendPage> {
     sendsms() async {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       // return;
-      final form = _quicksend.currentState;
       if (qsp.isContactlistempty()) {
-        qsp.errortext = "Please Enter Atleast 1 Number";
-        qsp.seterror(true);
+        qsp.seterror(true, errorText: "Please Enter Atleast 1 Number");
         return;
       }
       if (qsp.sender == qsp.senderid.first) {
-        qsp.errortext = "Select Sender ID";
-        qsp.seterror(true);
+        qsp.seterror(true, errorText: "Select Sender ID");
         return;
       }
+      final form = _quicksend.currentState;
       if (!form.validate()) {
-        qsp.errortext = "Please Type Message";
-        qsp.seterror(true);
+        qsp.seterror(true, errorText: "Please Type Message");
         return;
       }
       String u = await SharedData().username;
@@ -88,6 +86,9 @@ class _MessageSendPageState extends State<MessageSendPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
+                          Center(
+                              child: Text(
+                                  "Note: Please Enter Numbers seperated with comma(,)")),
                           Form(
                             key: _addnumberkey,
                             child: Row(
@@ -99,6 +100,18 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                     flex: 1,
                                     child: TextFormField(
                                       keyboardType: TextInputType.phone,
+                                      onChanged: (value) {
+                                        if (RegExp("[^0-9,]",
+                                                multiLine: true,
+                                                caseSensitive: false)
+                                            .hasMatch(value)) {
+                                          qsp.seterror(true,
+                                              errorText:
+                                                  "Please Enter Valid Numbers");
+                                          print("error found");
+                                        } else
+                                          qsp.seterror(false, errorText: null);
+                                      },
                                       validator: (value) {
                                         if (value.isEmpty)
                                           return "Please Enter Mobile Number ";
@@ -115,17 +128,17 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                     onPressed: () {
                                       _addnumberkey.currentState.reset();
                                     }),
-                                RaisedButton(
-                                  onPressed: () {
-                                    addcontacttolist();
-                                  },
-                                  child: Text(
-                                    "Add",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  color: Colors.white,
-                                  splashColor: Colors.deepOrange,
-                                )
+                                // RaisedButton(
+                                //   onPressed: () {
+                                //     addcontacttolist();
+                                //   },
+                                //   child: Text(
+                                //     "Add",
+                                //     style: TextStyle(color: Colors.black),
+                                //   ),
+                                //   color: Colors.white,
+                                //   splashColor: Colors.deepOrange,
+                                // )
                               ],
                             ),
                           ),
@@ -197,10 +210,10 @@ class _MessageSendPageState extends State<MessageSendPage> {
                       ),
                     ),
                   ),
-                  Expanded(
-                      flex: 1,
-                      child: SingleChildScrollView(
-                          child: InputChipWidget(qsp.contacts))),
+                  // Expanded(
+                  //     flex: 1,
+                  //     child: SingleChildScrollView(
+                  //         child: InputChipWidget(qsp.contacts))),
                 ],
               ),
             ),

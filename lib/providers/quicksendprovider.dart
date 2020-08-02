@@ -78,9 +78,11 @@ class QuickSendProvider with ChangeNotifier {
   String get errortext => _errortext;
   set errortext(value) => _errortext = value;
 
-  seterror(bool value, {Color color = Colors.redAccent}) {
+  seterror(bool value,
+      {Color color = Colors.redAccent, @required String errorText}) {
     _errorcolor = color;
     _error = value;
+    _errortext = errorText;
     notifyListeners();
   }
 
@@ -204,35 +206,8 @@ class QuickSendProvider with ChangeNotifier {
   }
 
   getcontactsfromphone(BuildContext context) async {
-    // print("${_selectedContact.length} + phone");
-
-    // var result = await Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => ReturnContact(_selectedContact)));
-
-    // if (result != null) {
-    //   if (_selectedContact.length == 0) {
-    //     print("emptyListWhenInsertedFromPhone");
-    //     _selectedContact = result["list"];
-    //   } else {
-    //     print("nonEmptyListWhenInsertedFromPhone");
-    //     print(
-    //         "${result["oldlist"].first.phones.toList().first.value} + phone of first Contact");
-    //     _selectedContact = result["oldlist"];
-    //     print(result["oldlist"].first.displayName);
-    //     print(_selectedContact.first.phones.toList().first.value);
-    //     print(result["list"]);
-    //     List<Contact> c = result["list"];
-    //     for (int i = 0; i < c.length; i++) {
-    //       _selectedContact.add(c[i]);
-    //     }
-    //   }
-    //   this.removeextracharfromnumbr();
-    // }
     _display = Display.PHONECONTACTS;
     notifyListeners();
-    //   // notifyListeners();
   }
 
   convertcontacttoplusformat() {
@@ -310,30 +285,17 @@ class QuickSendProvider with ChangeNotifier {
     var msgresponse = QuickSendResponse.fromJson(jsondata);
 
     if (msgresponse.status == errorCode[ErrorType.INCORRECT_LOGIN]) {
-      _errortext = msgresponse.statusMessage;
-      seterror(true);
-      // _msg = DrawerMessage.SHOW;
-      // _drawerMessageType = DrawerMessageType.ERROR;
-      // // _errormsg = errorMessage[ErrorType.INCORRECT_LOGIN];
-      // _errormsg = msgresponse.statusMessage;
+      // _errortext = msgresponse.statusMessage;
+      seterror(true, errorText: msgresponse.statusMessage);
       print("incorrect login");
     } else if (msgresponse.status == errorCode[ErrorType.MESSGE_ACCEPTED]) {
-      _errortext = msgresponse.statusMessage;
-      seterror(true, color: Colors.green);
+      // _errortext = msgresponse.statusMessage;
+      seterror(true, color: Colors.green, errorText: msgresponse.statusMessage);
       resetform(notify: false);
-      // _msg = DrawerMessage.SHOW;
-      // _drawerMessageType = DrawerMessageType.SUCCESS;
-      // // _errormsg = errorMessage[ErrorType.MESSGE_ACCEPTED];
-      // _errormsg = msgresponse.statusMessage;
-      // print("accepted");
     } else if (msgresponse.status ==
         errorCode[ErrorType.SENDER_ID_DONT_MATCH]) {
-      _errortext = msgresponse.statusMessage;
-      seterror(true);
-      // _msg = DrawerMessage.SHOW;
-      // _drawerMessageType = DrawerMessageType.ERROR;
-      // // _errormsg = errorMessage[ErrorType.SENDER_ID_DONT_MATCH];
-      // _errormsg = msgresponse.statusMessage;
+      // _errortext = msgresponse.statusMessage;
+      seterror(true, errorText: msgresponse.statusMessage);
       print("don't match");
     }
 

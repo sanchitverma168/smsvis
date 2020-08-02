@@ -76,27 +76,53 @@ class _ReturnContactQuickSendWidgetState
       );
     } else if (showScreen == ShowScreen.ListView) {
       print("inside listview");
-      body = Container(
-        height: MediaQuery.of(context).size.height,
-        child: ListView.builder(
-          itemCount: _contacts?.length ?? 0,
-          itemBuilder: (BuildContext context, int index) {
-            Contact c = _contacts?.elementAt(index);
-            return ListTile(
-              onTap: () {
-                print("working");
-                updateleadingicon(index);
-                print(activedisabled[index]);
+      body = Stack(
+        children: <Widget>[
+          Container(
+            // color: Colors.red,
+
+            // flex: 1,
+            // height: MediaQuery.of(context).size.height * 0.7,
+            child: ListView.builder(
+              itemCount: _contacts?.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                Contact c = _contacts?.elementAt(index);
+                return Card(
+                  elevation: 4,
+                  child: ListTile(
+                    onTap: () {
+                      print("working");
+                      updateleadingicon(index);
+                      print(activedisabled[index]);
+                    },
+                    leading: CircleAvatar(child: Text(c.initials())),
+                    title: Text(c.displayName ?? ""),
+                    trailing: activedisabled[index] == 0
+                        ? SizedBox(child: Icon(Icons.check_circle_outline))
+                        : SizedBox(
+                            child:
+                                Icon(Icons.check_circle, color: Colors.green)),
+                  ),
+                );
               },
-              leading: CircleAvatar(child: Text(c.initials())),
-              title: Text(c.displayName ?? ""),
-              trailing: activedisabled[index] == 0
-                  ? SizedBox(child: Icon(Icons.check_circle_outline))
-                  : SizedBox(
-                      child: Icon(Icons.check_circle, color: Colors.green)),
-            );
-          },
-        ),
+            ),
+          ),
+          Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  // color: Colors.lime,
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.white,
+                    onPressed: () {},
+                    child: Icon(Icons.search, color: Colors.deepOrange),
+                    splashColor: Colors.deepOrange,
+                  ),
+                ),
+              )),
+          Positioned(bottom: -5, left: -5, right: -5, child: bottomTools())
+        ],
       );
     } else if (showScreen == ShowScreen.Error) {
       print("inside errorr");
@@ -106,7 +132,7 @@ class _ReturnContactQuickSendWidgetState
           permission();
         },
         child: Container(
-          color: Colors.blue,
+          // color: Colors.blue,
           // height: MediaQuery.of(context).size.height,
           child: Center(
             child: Column(
@@ -197,6 +223,7 @@ class _ReturnContactQuickSendWidgetState
     for (int i = 0; i < activedisabled.length; i++) {
       selectedAll == true ? activedisabled[i] = 0 : activedisabled[i] = 1;
     }
+    selectedAll == false ? maxindex = activedisabled.length : maxindex = 0;
     selectedAll = !selectedAll;
     for (int i = 0; i < activedisabled.length; i++) print(activedisabled[i]);
     print("after");
@@ -209,44 +236,98 @@ class _ReturnContactQuickSendWidgetState
     final qsp = Provider.of<QuickSendProvider>(context, listen: false);
 
     return Scaffold(
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          OutlineButton(
-            onPressed: () {
-              qsp.getbacktosendmessageScreen();
-            },
-            child: Text("Cancel"),
-          ),
-          showScreen == ShowScreen.ListView
-              ? OutlineButton(
-                  onPressed: () {
-                    toggleSelectAll();
-                  },
-                  child: selectedAll == true
-                      ? Text("UnSelect All")
-                      : Text("Select All"),
-                )
-              : SizedBox(),
-          showScreen == ShowScreen.ListView
-              ? OutlineButton(
-                  onPressed: () {
-                    convertnumbertostring();
-                    for (int i = 0; i < selectedContacts.length; i++)
-                      qsp.addContact(
-                          selectedContacts[i].phones.toList().first.value,
-                          name: selectedContacts[i].displayName,
-                          notify: false);
-                    qsp.removeextracharfromnumbr();
-                    qsp.getbacktosendmessageScreen();
-                  },
-                  child: Text("Import"),
-                )
-              : SizedBox(),
-        ],
-      ),
+      // floatingActionButton: Container(
+      //   height: MediaQuery.of(context).size.height * 0.2,
+      //   child: Card(
+      //     elevation: 10,
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //       children: [
+      //         OutlineButton(
+      //           onPressed: () {
+      //             qsp.getbacktosendmessageScreen();
+      //           },
+      //           child: Text("Cancel"),
+      //         ),
+      //         showScreen == ShowScreen.ListView
+      //             ? OutlineButton(
+      //                 onPressed: () {
+      //                   toggleSelectAll();
+      //                 },
+      //                 child: selectedAll == true
+      //                     ? Text("UnSelect All")
+      //                     : Text("Select All"),
+      //               )
+      //             : SizedBox(),
+      //         showScreen == ShowScreen.ListView
+      //             ? OutlineButton(
+      //                 onPressed: () {
+      //                   convertnumbertostring();
+      //                   for (int i = 0; i < selectedContacts.length; i++)
+      //                     qsp.addContact(
+      //                         selectedContacts[i].phones.toList().first.value,
+      //                         name: selectedContacts[i].displayName,
+      //                         notify: false);
+      //                   qsp.removeextracharfromnumbr();
+      //                   qsp.getbacktosendmessageScreen();
+      //                 },
+      //                 child: Text("Import"),
+      //               )
+      //             : SizedBox(),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body: body,
       // body: Center(child: Text("adfaf")),
+    );
+  }
+
+  Widget bottomTools() {
+    final qsp = Provider.of<QuickSendProvider>(context, listen: false);
+    return Container(
+      // color: Colors.red,
+      height: MediaQuery.of(context).size.height * 0.125,
+      // width: MediaQuery.of(context).size.width * 1.2,
+      child: Card(
+        elevation: 10,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            OutlineButton(
+              onPressed: () {
+                qsp.getbacktosendmessageScreen();
+              },
+              child: Text("Cancel"),
+            ),
+            showScreen == ShowScreen.ListView
+                ? OutlineButton(
+                    onPressed: () {
+                      toggleSelectAll();
+                    },
+                    child: selectedAll == true
+                        ? Text("UnSelect All")
+                        : Text("Select All"),
+                  )
+                : SizedBox(),
+            showScreen == ShowScreen.ListView
+                ? OutlineButton(
+                    onPressed: () {
+                      convertnumbertostring();
+                      for (int i = 0; i < selectedContacts.length; i++)
+                        qsp.addContact(
+                            selectedContacts[i].phones.toList().first.value,
+                            name: selectedContacts[i].displayName,
+                            notify: false);
+                      qsp.removeextracharfromnumbr();
+                      qsp.getbacktosendmessageScreen();
+                    },
+                    child: Text("Import"),
+                  )
+                : SizedBox(),
+          ],
+        ),
+      ),
     );
   }
 }
