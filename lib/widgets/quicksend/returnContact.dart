@@ -76,52 +76,27 @@ class _ReturnContactQuickSendWidgetState
       );
     } else if (showScreen == ShowScreen.ListView) {
       print("inside listview");
-      body = Column(
-        children: <Widget>[
-          TextFormField(
-
-              // decoration: new InputDecoration(
-
-              //     border: OutlineInputBorder(
-              //         gapPadding: 2.0,
-              //         borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              //         borderSide:
-              //             BorderSide(color: Colors.grey, width: 1))),
-              ),
-          IconButton(icon: Icon(Icons.search), onPressed: null),
-          ListTile(
-            onTap: () => toggleSelectAll(),
-            trailing: Row(
-              children: <Widget>[
-                Text("Select all"),
-                Icon(Icons.check_circle_outline),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _contacts?.length ?? 0,
-              itemBuilder: (BuildContext context, int index) {
-                Contact c = _contacts?.elementAt(index);
-                return ListTile(
-                  onTap: () {
-                    print("working");
-                    updateleadingicon(index);
-                    print(activedisabled[index]);
-                  },
-                  leading: CircleAvatar(child: Text(c.initials())),
-                  title: Text(c.displayName ?? ""),
-                  trailing: activedisabled[index] == 0
-                      ? Icon(Icons.check_circle_outline)
-                      : Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                        ),
-                );
+      body = Container(
+        height: MediaQuery.of(context).size.height,
+        child: ListView.builder(
+          itemCount: _contacts?.length ?? 0,
+          itemBuilder: (BuildContext context, int index) {
+            Contact c = _contacts?.elementAt(index);
+            return ListTile(
+              onTap: () {
+                print("working");
+                updateleadingicon(index);
+                print(activedisabled[index]);
               },
-            ),
-          ),
-        ],
+              leading: CircleAvatar(child: Text(c.initials())),
+              title: Text(c.displayName ?? ""),
+              // trailing: activedisabled[index] == 0
+              //     ? SizedBox(child: Icon(Icons.check_circle_outline))
+              //     : SizedBox(
+              //         child: Icon(Icons.check_circle, color: Colors.green)),
+            );
+          },
+        ),
       );
     } else if (showScreen == ShowScreen.Error) {
       print("inside errorr");
