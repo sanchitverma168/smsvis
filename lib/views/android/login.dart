@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
           TextFormField(
             validator: (value) {
               email = value.trim();
-              if (value.isEmpty) return "Enter Username id";
+              if (value.isEmpty) return "Enter Username";
               return null;
             },
             obscureText: isPassword,
@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                 border: InputBorder.none,
                 fillColor: Color(0xfff3f3f4),
                 filled: true,
-                hintText: "Username Id"),
+                hintText: "Username"),
           )
         ],
       ),
@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Sender id"),
+        _entryField("Username"),
         _entryFieldPassword("Password", isPassword: true),
       ],
     );

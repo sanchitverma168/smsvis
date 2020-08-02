@@ -90,10 +90,10 @@ class _ReturnContactQuickSendWidgetState
               },
               leading: CircleAvatar(child: Text(c.initials())),
               title: Text(c.displayName ?? ""),
-              // trailing: activedisabled[index] == 0
-              //     ? SizedBox(child: Icon(Icons.check_circle_outline))
-              //     : SizedBox(
-              //         child: Icon(Icons.check_circle, color: Colors.green)),
+              trailing: activedisabled[index] == 0
+                  ? SizedBox(child: Icon(Icons.check_circle_outline))
+                  : SizedBox(
+                      child: Icon(Icons.check_circle, color: Colors.green)),
             );
           },
         ),
@@ -178,16 +178,30 @@ class _ReturnContactQuickSendWidgetState
       if (maxindex < index) maxindex = index;
       count++;
     }
-    setState(() {});
+    for (int i = 0; i < activedisabled.length; i++) {
+      if (activedisabled[i] == 1) {
+        selectedAll = true;
+        continue;
+      }
+      selectedAll = false;
+      break;
+    }
+    // setState(() {});
     refreshContacts(contacts);
   }
 
   toggleSelectAll() {
+    for (int i = 0; i < activedisabled.length; i++) print(activedisabled[i]);
+    print("before");
+
     for (int i = 0; i < activedisabled.length; i++) {
       selectedAll == true ? activedisabled[i] = 0 : activedisabled[i] = 1;
     }
     selectedAll = !selectedAll;
-    setState(() {});
+    for (int i = 0; i < activedisabled.length; i++) print(activedisabled[i]);
+    print("after");
+
+    refreshContacts(contacts);
   }
 
   @override
@@ -196,19 +210,26 @@ class _ReturnContactQuickSendWidgetState
 
     return Scaffold(
       floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          new FloatingActionButton(
-            heroTag: "cancel",
-            child: Text("Cancel"),
+          OutlineButton(
             onPressed: () {
               qsp.getbacktosendmessageScreen();
             },
+            child: Text("Cancel"),
           ),
           showScreen == ShowScreen.ListView
-              ? new FloatingActionButton(
-                  heroTag: "add",
-                  child: Text("Add"),
+              ? OutlineButton(
+                  onPressed: () {
+                    toggleSelectAll();
+                  },
+                  child: selectedAll == true
+                      ? Text("UnSelect All")
+                      : Text("Select All"),
+                )
+              : SizedBox(),
+          showScreen == ShowScreen.ListView
+              ? OutlineButton(
                   onPressed: () {
                     convertnumbertostring();
                     for (int i = 0; i < selectedContacts.length; i++)
@@ -219,6 +240,7 @@ class _ReturnContactQuickSendWidgetState
                     qsp.removeextracharfromnumbr();
                     qsp.getbacktosendmessageScreen();
                   },
+                  child: Text("Import"),
                 )
               : SizedBox(),
         ],
