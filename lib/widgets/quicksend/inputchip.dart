@@ -1,7 +1,5 @@
-import 'package:Smsvis/providers/quicksendprovider.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class InputChipWidget extends StatelessWidget {
   final List<Contact> selectedContact;
@@ -20,8 +18,8 @@ class InputChipWidget extends StatelessWidget {
                 child: InputChip(
                   label: Text("${selectedContact[i].phones.toList()[0].value}"),
                   onDeleted: () async {
-                    await Provider.of<QuickSendProvider>(context, listen: false)
-                        .deleteContact(i);
+                    // await Provider.of<QuickSendProvider>(context, listen: false)
+                    //     .deleteContact(i);
                   },
                 ),
               ),

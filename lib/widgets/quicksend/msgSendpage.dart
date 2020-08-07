@@ -1,10 +1,7 @@
 import 'package:Smsvis/providers/quicksendprovider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'package:Smsvis/utils/sharedpreference.dart';
-import 'package:Smsvis/utils/validateform.dart';
 import 'package:Smsvis/widgets/quicksend/displayContentdata.dart';
 import 'package:Smsvis/widgets/quicksend/error.dart';
 import 'package:Smsvis/widgets/quicksend/importContacts.dart';
@@ -22,31 +19,58 @@ class MessageSendPage extends StatefulWidget {
 class _MessageSendPageState extends State<MessageSendPage> {
   final GlobalKey<FormState> _quicksend = GlobalKey<FormState>();
   final GlobalKey<FormState> _addnumberkey = GlobalKey<FormState>();
+  TextEditingController numberController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     final qsp = Provider.of<QuickSendProvider>(context, listen: false);
-    var number;
+
     String usermessage;
+    String number;
+    // List<String> numberlist = new List();
     var inputDecoration =
         new InputDecoration(filled: true, fillColor: Colors.white);
     Timer searchOnStoppedTyping;
-    addcontacttolist() async {
-      var formdata = _addnumberkey.currentState;
-      if (formdata.validate()) {
-        await Provider.of<QuickSendProvider>(context, listen: false)
-            .addContact(number);
-        _addnumberkey.currentState.reset();
-      }
-    }
+    // addcontacttolist() async {
+    //   var formdata = _addnumberkey.currentState;
+    //   if (formdata.validate()) {
+    //     await Provider.of<QuickSendProvider>(context, listen: false)
+    //         .addContact(number);
+    //     _addnumberkey.currentState.reset();
+    //   }
+    // }
 
     sendsms() async {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
-      // return;
-      if (qsp.isContactlistempty()) {
-        qsp.seterror(true, errorText: "Please Enter Atleast 1 Number");
+      print(qsp.lcontacts.length);
+      print(numberController.text);
+      print(numberController.text.length);
+      if (qsp.lcontacts.length == 0 && numberController.text.isEmpty) {
+        qsp.seterror(true, errorText: "No Number to Send Message");
         return;
       }
-      if (qsp.sender == qsp.senderid.first) {
+      if (numberController.text.length != 0) {
+        print("after form save 1111");
+        final form = _addnumberkey.currentState;
+        print("after form save 1222");
+        form.save();
+        print("after form save 3333");
+        print("after form save");
+        print(number);
+        if (number[number.length - 1] == ",") {
+          number = number.split(",").join("+");
+        } else {
+          number += ",";
+          number = number.split(",").join("+");
+        }
+      }
+      print("$number  after");
+
+      // return;
+      // if (qsp.isContactlistempty()) {
+      //   qsp.seterror(true, errorText: "Please Enter Atleast 1 Number");
+      //   return;
+      // }
+      if (qsp.sender == senderid.first || qsp.sender == null) {
         qsp.seterror(true, errorText: "Select Sender ID");
         return;
       }
@@ -55,11 +79,14 @@ class _MessageSendPageState extends State<MessageSendPage> {
         qsp.seterror(true, errorText: "Please Type Message");
         return;
       }
+
+      qsp.seterror(true, errorText: "Not Updated Yet");
+      return;
       String u = await SharedData().username;
       String p = await SharedData().password;
-      String number =
-          await Provider.of<QuickSendProvider>(context, listen: false)
-              .convertcontacttoplusformat();
+      // String number =
+      //     await Provider.of<QuickSendProvider>(context, listen: false)
+      //         .convertcontacttoplusformat();
       print(number);
       await Provider.of<QuickSendProvider>(context, listen: false)
           .sendmessage(qsp.sender, usermessage, p, number, u);
@@ -68,6 +95,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
     }
 
     return Consumer<QuickSendProvider>(builder: (context, user, child) {
+      // print(user.lcontacts[11]["type"]);
       // return SafeArea(child: QuickSendNew());
       return SafeArea(
           child: Scaffold(
@@ -99,25 +127,23 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                 Expanded(
                                     flex: 1,
                                     child: TextFormField(
+                                      controller: numberController,
                                       keyboardType: TextInputType.phone,
-                                      onChanged: (value) {
-                                        if (RegExp("[^0-9,]",
-                                                multiLine: true,
-                                                caseSensitive: false)
-                                            .hasMatch(value)) {
-                                          qsp.seterror(true,
-                                              errorText:
-                                                  "Please Enter Valid Numbers");
-                                          print("error found");
-                                        } else
-                                          qsp.seterror(false, errorText: null);
+                                      onSaved: (newValue) {
+                                        number = newValue;
                                       },
-                                      validator: (value) {
-                                        if (value.isEmpty)
-                                          return "Please Enter Mobile Number ";
-                                        number = int.parse(value.trim());
-                                        return Validate.number(
-                                            number, qsp.contacts);
+                                      onChanged: (value) {
+                                        // if (RegExp("[^0-9,]",
+                                        //         multiLine: true,
+                                        //         caseSensitive: false)
+                                        //     .hasMatch(value)) {
+                                        //   qsp.seterror(true,
+                                        //       errorText:
+                                        //           "Please Enter Valid Numbers");
+                                        //   print("error found");
+                                        // } else
+                                        //   qsp.seterror(false, errorText: null);
+                                        qsp.validateusernumberentered(value);
                                       },
                                       cursorColor: Colors.red,
                                       decoration: inputDecoration,
@@ -126,7 +152,8 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                 IconButton(
                                     icon: Icon(Icons.clear),
                                     onPressed: () {
-                                      _addnumberkey.currentState.reset();
+                                      numberController.clear();
+                                      // _addnumberkey.currentState.reset();
                                     }),
                                 // RaisedButton(
                                 //   onPressed: () {
@@ -189,6 +216,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                   icon: Icon(Icons.clear),
                                   onPressed: () {
                                     _quicksend.currentState.reset();
+                                    qsp.resetMsgBox();
                                   }),
                             ],
                           ),
@@ -200,9 +228,33 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                 DisplayContentData("Characters", qsp.charleft),
                                 Divider(),
                                 DisplayContentData(
-                                    "Contacts Added", qsp.contacts.length),
+                                    "User Contacts", qsp.typeContacts),
                                 DisplayContentData(
-                                    "File Contacts", qsp.filecontacts.length),
+                                    "Phone Contacts", qsp.phoneContacts),
+                                DisplayContentData(
+                                    "File Contacts", qsp.fileContacts),
+                                Divider(),
+                                DisplayContentData(
+                                    "Total Contacts", qsp.lcontacts.length),
+                                FlatButton(
+                                    onPressed: () {
+                                      qsp.seterror(true,
+                                          errorText:
+                                              "View Contacts Page Not Made Yet");
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: Icon(Icons.contact_phone,
+                                              color: Colors.deepOrange),
+                                        ),
+                                        Text("View Contacts"),
+                                      ],
+                                    )),
                               ],
                             ),
                           ),

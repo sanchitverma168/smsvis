@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:Smsvis/models/api.dart';
 import 'package:Smsvis/models/quicksendresponse.dart';
 import 'package:contacts_service/contacts_service.dart';
@@ -16,6 +15,8 @@ List<String> errormessage = [
 ];
 enum ErrorType { INCORRECT_LOGIN, MESSGE_ACCEPTED, SENDER_ID_DONT_MATCH }
 enum Display { PHONECONTACTS, SENDMESSAGE }
+enum ShowScreen { Progress, ListView, Error, SearchedContacts }
+enum ContactType { istyped, isphone, isfile }
 Map errorMessage = {
   ErrorType.INCORRECT_LOGIN: "Incorrect Login",
   ErrorType.MESSGE_ACCEPTED: "Message Accepted",
@@ -26,6 +27,14 @@ Map errorCode = {
   ErrorType.MESSGE_ACCEPTED: 202,
   ErrorType.SENDER_ID_DONT_MATCH: 406
 };
+List<String> senderid = [
+  'Select Sender ID',
+  'DEMAPI',
+  'DEMOID',
+  'smsvis',
+  'id 4',
+  'id 5',
+];
 
 class QuickSendProvider with ChangeNotifier {
   Display _display = Display.SENDMESSAGE;
@@ -35,7 +44,24 @@ class QuickSendProvider with ChangeNotifier {
   Color get fcolor => _maincolor.first;
   Color get scolor => _maincolor[1];
 
+  List<Map> lcontacts = new List();
+
+  /// [
+  ///   {
+  ///     name:"Sanchit Verma",
+  ///     number:"8193025998",
+  ///     type :"istyped"
+  ///   },
+  ///   {
+  ///     name:"Demo Verma",
+  ///     number:"9149253879",
+  ///     type :"isphone"
+  ///   }
+  /// ]
+
   int _maxContacttoshow = 20;
+  int get maxContact => _maxContacttoshow;
+
   bool _showimportbutton = false;
   bool get showimportbutton => _showimportbutton;
   set showimportbutton(bool value) {
@@ -43,26 +69,37 @@ class QuickSendProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  int get maxContact => _maxContacttoshow;
+  List<int> selectedContactsindex = new List();
+
+  List<Contact> _viewselectedContact = new List();
+  List<Contact> get viewselectedContact => _viewselectedContact;
 
   List<Contact> _selectedContact = new List();
   List<Contact> get contacts => _selectedContact;
-  List<Contact> _fileContacts = new List();
-  List<Contact> get filecontacts => _fileContacts;
+
+  // List<Contact> _fileContacts = new List();
+  // List<Contact> get filecontacts => _fileContacts;
+  set viewselectedContact(value) {
+    _viewselectedContact.add(value);
+    notifyListeners();
+  }
 
   List<String> filename = new List();
-  List<String> senderid = [
-    'Select Sender ID',
-    'DEMAPI',
-    'DEMOID',
-    'smsvis',
-    'id 4',
-    'id 5',
-  ];
+
   int msgCount = 0, charleft = 0;
   int maxEnglishChars = 160;
   int maxNonEnglishChars = 70;
-  String _senderidselected;
+  int _fileContacts = 0;
+  int get fileContacts => _fileContacts;
+
+  int _phoneContacts = 0;
+  int get phoneContacts => _phoneContacts;
+  set phoneContacts(value) => _phoneContacts += value;
+  int _typeContacts = 0;
+  int get typeContacts => _typeContacts;
+  set typeContacts(value) => _typeContacts = value;
+
+  String _senderidselected = senderid.first;
   String get sender => _senderidselected;
   bool _error = false;
   bool get error => _error;
@@ -83,20 +120,6 @@ class QuickSendProvider with ChangeNotifier {
     _errorcolor = color;
     _error = value;
     _errortext = errorText;
-    notifyListeners();
-  }
-
-  addContact(number, {String name = "Temp", bool notify = true}) {
-    Contact contact = new Contact();
-    contact.phones = [Item(label: "mobile", value: number.toString())];
-    contact.givenName = name;
-    _selectedContact.add(contact);
-    _error = false;
-    if (notify) notifyListeners();
-  }
-
-  deleteContact(i) {
-    _selectedContact.removeAt(i);
     notifyListeners();
   }
 
@@ -129,17 +152,16 @@ class QuickSendProvider with ChangeNotifier {
         List row = line.split(' '); // split by comma
 
         String number = row[0];
-        Contact contact = new Contact();
-        contact.givenName = "From CSV";
-        contact.phones = [Item(label: "mobile", value: number)];
-        _fileContacts.add(contact);
+        addcontacttolcontacts(
+            name: "File Contact",
+            number: number,
+            type: ContactType.isfile.toString());
 
         print('$number');
+        _fileContacts += 1;
       }, onDone: () {
         filename.add(name);
-        // setState(() {});
         print('File is now closed.');
-        // Toast.show("Uploaded ${_fileContacts.length} Successfuly", context);
       }, onError: (e) {
         print(e.toString());
       });
@@ -147,6 +169,21 @@ class QuickSendProvider with ChangeNotifier {
 
     notifyListeners();
     this.removeextracharfromnumbr();
+  }
+
+  void addcontacttolcontacts(
+      {@required String name, @required String number, @required String type}) {
+    Map mcontacts = new Map();
+
+    /// [Map] [mcontacts data to be stored]
+    ///  {name:"Sanchit Verma",
+    ///   number:"8193025998",
+    ///   type :"istyped" }
+    ///
+    mcontacts["name"] = name;
+    mcontacts["number"] = number;
+    mcontacts["type"] = type;
+    lcontacts.add(mcontacts);
   }
 
   removeextracharfromnumbr() {
@@ -210,28 +247,28 @@ class QuickSendProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  convertcontacttoplusformat() {
-    String number;
-    if (_selectedContact.length != 0) {
-      for (int i = 0; i < _selectedContact.length; i++) {
-        if (number == null) {
-          number = _selectedContact[i].phones.toList()[0].value;
-          continue;
-        }
-        number = number + "+" + _selectedContact[i].phones.toList()[0].value;
-      }
-    }
-    if (_fileContacts.length != 0) {
-      for (int i = 0; i < _fileContacts.length; i++) {
-        if (number == null) {
-          number = _fileContacts[i].phones.toList()[0].value;
-          continue;
-        }
-        number = number + "+" + _fileContacts[i].phones.toList()[0].value;
-      }
-    }
-    return number;
-  }
+  // convertcontacttoplusformat() {
+  //   String number;
+  //   if (_selectedContact.length != 0) {
+  //     for (int i = 0; i < _selectedContact.length; i++) {
+  //       if (number == null) {
+  //         number = _selectedContact[i].phones.toList()[0].value;
+  //         continue;
+  //       }
+  //       number = number + "+" + _selectedContact[i].phones.toList()[0].value;
+  //     }
+  //   }
+  //   if (_fileContacts.length != 0) {
+  //     for (int i = 0; i < _fileContacts.length; i++) {
+  //       if (number == null) {
+  //         number = _fileContacts[i].phones.toList()[0].value;
+  //         continue;
+  //       }
+  //       number = number + "+" + _fileContacts[i].phones.toList()[0].value;
+  //     }
+  //   }
+  //   return number;
+  // }
 
   changesenderid(String value) {
     _senderidselected = value;
@@ -268,13 +305,23 @@ class QuickSendProvider with ChangeNotifier {
 
   resetform({bool notify = true}) {
     _selectedContact.clear();
-    _fileContacts.clear();
+    phoneContacts = 0;
+    _fileContacts = 0;
+    typeContacts = 0;
+
+    // _fileContacts.clear();
     msgCount = 0;
     charleft = 0;
     _senderidselected = senderid[0];
     filename.clear();
     _error = false;
     if (notify) notifyListeners();
+  }
+
+  resetMsgBox() {
+    msgCount = 0;
+    charleft = 0;
+    notifyListeners();
   }
 
   Future sendmessage(String id, String usermessage, String password,
@@ -303,13 +350,59 @@ class QuickSendProvider with ChangeNotifier {
     return;
   }
 
-  isContactlistempty() {
-    if (_selectedContact.length == 0 && _fileContacts.length == 0) return true;
-    return false;
-  }
+  // isContactlistempty() {
+  //   if (_selectedContact.length == 0 && _fileContacts.length == 0) return true;
+  //   return false;
+  // }
 
   getbacktosendmessageScreen() {
     _display = Display.SENDMESSAGE;
     notifyListeners();
+  }
+
+  validateusernumberentered(String value) {
+    print("hee");
+    if (!isNumberorComma(value)) {
+      return seterror(true, errorText: "Not Supported");
+    }
+    print(isNumberLengthCorrect(value));
+    if (!isNumberLengthCorrect(value)) {
+      return seterror(true, errorText: "Enter Valid Numbers");
+    }
+    seterror(false, errorText: null);
+  }
+
+  bool isNumberorComma(value) {
+    if (RegExp("[^0-9,]", multiLine: true, caseSensitive: false)
+        .hasMatch(value)) return false;
+    return true;
+  }
+
+  bool isNumberLengthCorrect(value) {
+    var r = true;
+    int count = 0;
+    List<String> numbers = value.split(",");
+    print("1");
+    numbers.forEach((element) {
+      print("2");
+      if (element.length != 10 &&
+          element != " " &&
+          element != null &&
+          element.length != 0) {
+        print("3");
+        return r = false;
+      } else
+        count += 1;
+      print("4");
+
+      r = true;
+    });
+    print("5");
+    typeContacts = count;
+    print("6");
+    if (r) print(numbers.length);
+    print("7");
+    return r;
+    // return true;
   }
 }

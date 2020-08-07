@@ -162,6 +162,11 @@ class SideDrawer extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("Settings"),
+              onTap: () {},
+            ),
+            ListTile(
               leading: Icon(Icons.help),
               title: Text("About US"),
               onTap: () {

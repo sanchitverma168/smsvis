@@ -1,3 +1,4 @@
+import 'package:Smsvis/providers/importContact.dart';
 import 'package:Smsvis/providers/quicksendprovider.dart';
 import 'package:Smsvis/widgets/quicksend/msgSendpage.dart';
 import 'package:Smsvis/widgets/quicksend/returnContact.dart';
@@ -12,7 +13,10 @@ class QuickSend extends StatelessWidget {
     return Consumer<QuickSendProvider>(builder: (context, user, child) {
       switch (user.display) {
         case Display.PHONECONTACTS:
-          return ReturnContactQuickSendWidget();
+          return ChangeNotifierProvider(
+            create: (context) => ImportContact(),
+            child: ReturnContactQuickSendWidget(),
+          );
         case Display.SENDMESSAGE:
           return MessageSendPage();
         default:

@@ -21,7 +21,7 @@ class SelectSenderId extends StatelessWidget {
             onChanged: (String value) {
               qsp.changesenderid(value);
             },
-            items: qsp.senderid.map<DropdownMenuItem<String>>((String value) {
+            items: senderid.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(value: value, child: Text(value));
             }).toList(),
           ),
