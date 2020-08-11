@@ -125,7 +125,7 @@ class QuickSendProvider with ChangeNotifier {
 
   importCSVFILE(BuildContext context) async {
     print("${_selectedContact.length} + csv");
-    File file = await FilePicker.getFile();
+    File file = await FilePicker.getFile(allowCompression: false);
     if (file != null) {
       String name = file.path.split('/').last;
       String ext = file.path.split('.').last;

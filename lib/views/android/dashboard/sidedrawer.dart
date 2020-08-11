@@ -3,6 +3,7 @@ import 'package:Smsvis/providers/routehandler.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
+import '../settings/settings.dart';
 
 class SideDrawer extends StatelessWidget {
   final String username;
@@ -164,7 +165,13 @@ class SideDrawer extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.settings),
               title: Text("Settings"),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Settings(),
+                    ));
+              },
             ),
             ListTile(
               leading: Icon(Icons.help),

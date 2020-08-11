@@ -66,6 +66,8 @@ class _$AppDatabase extends AppDatabase {
 
   PastContactsSendMessageDao _pcsmInstance;
 
+  BlackListDao _blacklistdaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -89,6 +91,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `FavouriteList` (`id` TEXT, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `PastContactsSendMessage` (`id` TEXT, `contactcount` INTEGER, `msg` TEXT, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `BlackListedNumber` (`id` TEXT, `number` TEXT, `date` TEXT, `time` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -110,6 +114,11 @@ class _$AppDatabase extends AppDatabase {
   PastContactsSendMessageDao get pcsm {
     return _pcsmInstance ??=
         _$PastContactsSendMessageDao(database, changeListener);
+  }
+
+  @override
+  BlackListDao get blacklistdao {
+    return _blacklistdaoInstance ??= _$BlackListDao(database, changeListener);
   }
 }
 
@@ -225,5 +234,50 @@ class _$PastContactsSendMessageDao extends PastContactsSendMessageDao {
       PastContactsSendMessage pastContactsSendMessage) async {
     await _pastContactsSendMessageInsertionAdapter.insert(
         pastContactsSendMessage, OnConflictStrategy.abort);
+  }
+}
+
+class _$BlackListDao extends BlackListDao {
+  _$BlackListDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _blackListedNumberInsertionAdapter = InsertionAdapter(
+            database,
+            'BlackListedNumber',
+            (BlackListedNumber item) => <String, dynamic>{
+                  'id': item.id,
+                  'number': item.number,
+                  'date': item.date,
+                  'time': item.time
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _blackListedNumberMapper = (Map<String, dynamic> row) =>
+      BlackListedNumber(row['id'] as String, row['number'] as String,
+          row['date'] as String, row['time'] as String);
+
+  final InsertionAdapter<BlackListedNumber> _blackListedNumberInsertionAdapter;
+
+  @override
+  Future<List<BlackListedNumber>> getallNumbers() async {
+    return _queryAdapter.queryList('Select * from BlackListedNumber',
+        mapper: _blackListedNumberMapper);
+  }
+
+  @override
+  Future<void> deleteNumber(String id) async {
+    await _queryAdapter.queryNoReturn(
+        'Delete from BlackListedNumber where id= ?',
+        arguments: <dynamic>[id]);
+  }
+
+  @override
+  Future<void> save(BlackListedNumber blackListedNumber) async {
+    await _blackListedNumberInsertionAdapter.insert(
+        blackListedNumber, OnConflictStrategy.abort);
   }
 }

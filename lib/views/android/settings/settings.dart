@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../blacklistNumberPage.dart';
 
 class Settings extends StatelessWidget {
   const Settings({Key key}) : super(key: key);
@@ -12,7 +13,14 @@ class Settings extends StatelessWidget {
       body: Column(
         children: <Widget>[
           ListTile(
-            leading: Icon(Icons.settings),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlacklistNumberPage(),
+                  ));
+            },
+            leading: Icon(Icons.block),
             title: Text("Blacklist Numbers"),
             subtitle: Text("Numbers 0"),
           ),
