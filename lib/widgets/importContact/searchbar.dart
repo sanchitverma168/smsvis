@@ -30,7 +30,7 @@ class _SearchBarState extends State<SearchBar> {
                           key: searchcontact,
                           child: TextFormField(
                               onChanged: (value) {
-                                print("hello");
+                                // print("hello");
                                 importContacts.search(value);
                               },
                               decoration: InputDecoration(

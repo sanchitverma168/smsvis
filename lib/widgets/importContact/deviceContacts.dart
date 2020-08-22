@@ -11,7 +11,7 @@ class DeviceContacts extends StatelessWidget {
         Provider.of<ImportContact>(context, listen: false);
     var contacts = importContacts.showContacts;
     var selectedindex = importContacts.selectedContactsindex;
-    print("DeviceContacts");
+    // print("DeviceContacts");
     // var s = " ";
     // for (int i = 0; i < selectedindex.length; i++)
     //   s += selectedindex[i].toString() + " ";
@@ -19,7 +19,7 @@ class DeviceContacts extends StatelessWidget {
     return ListView.builder(
       itemCount: contacts?.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
-        print(contacts[index].toMap());
+        // print(contacts[index].toMap());
         if (contacts[index].displayName != null) {
           // print(contacts[index].displayName + "$index");
           return Card(

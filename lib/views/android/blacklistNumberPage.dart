@@ -36,7 +36,7 @@ class _BlacklistNumberPageState extends State<BlacklistNumberPage> {
     database.close();
 
     getnumbers();
-    print(true);
+    // print(true);
   }
 
   @override
@@ -52,7 +52,7 @@ class _BlacklistNumberPageState extends State<BlacklistNumberPage> {
         await $FloorAppDatabase.databaseBuilder(databaseName).build();
 
     final bnumbers = database.blacklistdao;
-    print(bnumbers);
+    // print(bnumbers);
     blnumbers = await bnumbers.getallNumbers();
     if (blnumbers.length != 0)
       data = Data.Found;
@@ -66,7 +66,7 @@ class _BlacklistNumberPageState extends State<BlacklistNumberPage> {
     final database =
         await $FloorAppDatabase.databaseBuilder(databaseName).build();
     await database.blacklistdao.deleteNumber(index);
-    print(true);
+    // print(true);
     getnumbers();
   }
 

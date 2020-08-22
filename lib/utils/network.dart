@@ -38,32 +38,32 @@ class Network {
   Network(this.url);
 
   Future getData() async {
-    print('Calling uri: $url');
+    // print('Calling uri: $url');
     Response response = await get(url);
     if (response.statusCode == 200)
       return response.body;
-    else
-      print(response.statusCode);
+    else {}
+    // print(response.statusCode);
   }
 
   Future sendmsg() async {
-    print('Calling uri:$url');
+    // print('Calling uri:$url');
     Response response = await get(url);
     return response.body;
   }
 
   Future<Response> postRequest(body) async {
-    print('Calling uri: $url');
+    // print('Calling uri: $url');
     Response response = await post(
       url,
       headers: headers,
       body: body,
     );
     if (response.statusCode == 200) {
-      print(response);
+      // print(response);
       return response;
     } else
-      print(response.statusCode);
-    return response;
+      // print(response.statusCode);
+      return response;
   }
 }

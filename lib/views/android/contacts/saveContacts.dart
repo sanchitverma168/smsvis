@@ -97,7 +97,7 @@ class _SaveContactsState extends State<SaveContacts> {
 
   @override
   Widget build(BuildContext context) {
-    print("working");
+    // print("working");
     return Scaffold(
       body: WillPopScope(
         onWillPop: () {
@@ -115,7 +115,7 @@ class _SaveContactsState extends State<SaveContacts> {
                       return Card(
                         child: GestureDetector(
                           onTap: () {
-                            print(index);
+                            // print(index);
                           },
                           child: ListTile(
                             title: Text(

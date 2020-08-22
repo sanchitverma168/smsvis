@@ -10,7 +10,7 @@ class CantReadContacts extends StatelessWidget {
       child: Center(
         child: GestureDetector(
           onHorizontalDragDown: (details) {
-            print("updating Screen");
+            // print("updating Screen");
             // permission();
           },
           child: Container(

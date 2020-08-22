@@ -1,4 +1,6 @@
 import 'package:Smsvis/providers/quicksendprovider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:Smsvis/views/android/dashboard/viewSelectedContacts/selectedContacts.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:Smsvis/utils/sharedpreference.dart';
@@ -19,7 +21,8 @@ class MessageSendPage extends StatefulWidget {
 class _MessageSendPageState extends State<MessageSendPage> {
   final GlobalKey<FormState> _quicksend = GlobalKey<FormState>();
   final GlobalKey<FormState> _addnumberkey = GlobalKey<FormState>();
-  TextEditingController numberController = new TextEditingController();
+
+  // TextEditingController numberController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     final qsp = Provider.of<QuickSendProvider>(context, listen: false);
@@ -41,30 +44,41 @@ class _MessageSendPageState extends State<MessageSendPage> {
 
     sendsms() async {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
-      print(qsp.lcontacts.length);
-      print(numberController.text);
-      print(numberController.text.length);
-      if (qsp.lcontacts.length == 0 && numberController.text.isEmpty) {
-        qsp.seterror(true, errorText: "No Number to Send Message");
-        return;
-      }
-      if (numberController.text.length != 0) {
-        print("after form save 1111");
+      // print(qsp.lcontacts.length);
+      _addnumberkey.currentState.save();
+      // print(number);
+      if (qsp.lcontacts.length == 0 && number.length == 0)
+        return qsp.seterror(true, errorText: "No Number to Send Message");
+      if (number.length != 0) {
+        // print("after form save 1111");
         final form = _addnumberkey.currentState;
-        print("after form save 1222");
+        // print("after form save 1222");
         form.save();
-        print("after form save 3333");
-        print("after form save");
-        print(number);
-        if (number[number.length - 1] == ",") {
-          number = number.split(",").join("+");
-        } else {
-          number += ",";
-          number = number.split(",").join("+");
+        // print("after form save 3333");
+        // print("after form save");
+        // print(number);
+        // if (number[number.length - 1] == ",") {
+        //   number = number.split(",").join("+");
+        // } else {
+        // number += ",";
+        number = number.split(",").join("+");
+        // }
+      }
+      // print(number + "after");
+      // print(qsp.lcontacts.length);
+      if (qsp.lcontacts.length != 0) {
+        for (int i = 0; i < qsp.lcontacts.length; i++) {
+          if (number.length != 0) {
+            number += "+";
+            String lnumber = qsp.lcontacts[i]["number"];
+            lnumber = qsp.maketendigitnumber(number: lnumber);
+            number = number + lnumber;
+            continue;
+          }
+          number = qsp.maketendigitnumber(number: qsp.lcontacts[i]["number"]);
         }
       }
-      print("$number  after");
-
+      // print(number);
       // return;
       // if (qsp.isContactlistempty()) {
       //   qsp.seterror(true, errorText: "Please Enter Atleast 1 Number");
@@ -79,15 +93,15 @@ class _MessageSendPageState extends State<MessageSendPage> {
         qsp.seterror(true, errorText: "Please Type Message");
         return;
       }
-
-      qsp.seterror(true, errorText: "Not Updated Yet");
-      return;
+      // number = null;
+      // qsp.seterror(true, errorText: "Not Updated Yet");
+      // return;
       String u = await SharedData().username;
       String p = await SharedData().password;
       // String number =
       //     await Provider.of<QuickSendProvider>(context, listen: false)
       //         .convertcontacttoplusformat();
-      print(number);
+      // print(number + "hello");
       await Provider.of<QuickSendProvider>(context, listen: false)
           .sendmessage(qsp.sender, usermessage, p, number, u);
 
@@ -95,13 +109,10 @@ class _MessageSendPageState extends State<MessageSendPage> {
     }
 
     return Consumer<QuickSendProvider>(builder: (context, user, child) {
-      // print(user.lcontacts[11]["type"]);
-      // return SafeArea(child: QuickSendNew());
-      return SafeArea(
-          child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
+      return Scaffold(
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -127,11 +138,12 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                 Expanded(
                                     flex: 1,
                                     child: TextFormField(
-                                      controller: numberController,
+                                      // controller: numberController,
                                       keyboardType: TextInputType.phone,
                                       onSaved: (newValue) {
                                         number = newValue;
                                       },
+
                                       onChanged: (value) {
                                         // if (RegExp("[^0-9,]",
                                         //         multiLine: true,
@@ -152,7 +164,9 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                 IconButton(
                                     icon: Icon(Icons.clear),
                                     onPressed: () {
-                                      numberController.clear();
+                                      _addnumberkey.currentState.reset();
+                                      // numberController.clear();
+                                      // numberController.text = null;
                                       // _addnumberkey.currentState.reset();
                                     }),
                                 // RaisedButton(
@@ -236,25 +250,31 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                 Divider(),
                                 DisplayContentData(
                                     "Total Contacts", qsp.lcontacts.length),
-                                FlatButton(
-                                    onPressed: () {
-                                      qsp.seterror(true,
-                                          errorText:
-                                              "View Contacts Page Not Made Yet");
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: Icon(Icons.contact_phone,
-                                              color: Colors.deepOrange),
-                                        ),
-                                        Text("View Contacts"),
-                                      ],
-                                    )),
+                                // FlatButton(
+                                //     onPressed: () {
+                                //       Navigator.push(
+                                //           context,
+                                //           MaterialPageRoute(
+                                //               builder: (context) =>
+                                //                   SelectedContacts()));
+
+                                //       // qsp.seterror(true,
+                                //       //     errorText:
+                                //       //         "View Contacts Page Not Made Yet");
+                                //     },
+                                //     child: Row(
+                                //       mainAxisAlignment:
+                                //           MainAxisAlignment.center,
+                                //       children: <Widget>[
+                                //         Padding(
+                                //           padding:
+                                //               const EdgeInsets.only(right: 8.0),
+                                //           child: Icon(Icons.contact_phone,
+                                //               color: Colors.deepOrange),
+                                //         ),
+                                //         Text("View Contacts"),
+                                //       ],
+                                //     )),
                               ],
                             ),
                           ),
@@ -305,7 +325,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
             )
           ],
         ),
-      ));
+      );
     });
   }
 }

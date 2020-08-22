@@ -29,9 +29,9 @@ class _FavouriteListViewState extends State<FavouriteListView> {
     final fl = db.fl;
     data = await fl.getlist();
     l = data.length;
-    print(l);
+    // print(l);
     if (l != 0) isDataParse = true;
-    print(data);
+    // print(data);
     _updateUI();
     setState(() {});
   }
@@ -118,7 +118,7 @@ class _ViewContactListState extends State<ViewContactList> {
     data = await contact.getcontact(false, widget.id);
     l = data.length;
     isDataParse = true;
-    print(data);
+    // print(data);
     _updateUI();
     setState(() {});
   }

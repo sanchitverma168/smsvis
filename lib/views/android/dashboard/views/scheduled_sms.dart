@@ -32,25 +32,26 @@ class _ScheduledsmsState extends State<Scheduledsms> {
   Widget build(BuildContext context) {
     init();
     return Container(
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            RaisedButton.icon(
-                onPressed: () async {
-                  if (await InternetConnection().isConnected()) {
-                    connection = "Connected";
-                  } else
-                    connection = "Not Connected";
-                  setState(() {});
-                },
-                icon: Icon(Icons.add),
-                label: Text("First")),
-            Text("$connection"),
-            Text("$islogin"),
-            Text("$isfirsttime"),
-          ],
-        ),
-      ),
+      child: Center(child: Text("Page Not Made yet")),
+      // child: Center(
+      //   child: Column(
+      //     children: <Widget>[
+      //       RaisedButton.icon(
+      //           onPressed: () async {
+      //             if (await InternetConnection().isConnected()) {
+      //               connection = "Connected";
+      //             } else
+      //               connection = "Not Connected";
+      //             setState(() {});
+      //           },
+      //           icon: Icon(Icons.add),
+      //           label: Text("First")),
+      //       Text("$connection"),
+      //       Text("$islogin"),
+      //       Text("$isfirsttime"),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

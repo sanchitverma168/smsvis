@@ -51,6 +51,20 @@ class SideDrawer extends StatelessWidget {
                 // color: Color.fromRGBO(0, 176, 255, 1.0),
               ),
             ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Credits: 12",
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+            ),
             ExpansionTile(
               leading: Icon(Icons.message),
               title: Text("Sms"),

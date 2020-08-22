@@ -39,8 +39,8 @@ class RouteHandler with ChangeNotifier {
     var response = await API().login(id, password);
     var jsondata = json.decode(response);
     var responsemsg = QuickSendResponse.fromJson(jsondata);
-    print(responsemsg.status);
-    print(responsemsg.statusMessage);
+    // print(responsemsg.status);
+    // print(responsemsg.statusMessage);
 
     if (responsemsg.status == errorCode[ErrorType.INCORRECT_LOGIN]) {
       _login = false;
@@ -50,10 +50,10 @@ class RouteHandler with ChangeNotifier {
       SharedData().setlogincredentials(id, password);
     }
     if (_login) {
-      print("notify print");
+      // print("notify print");
       notifyListeners();
     }
-    print(_login);
+    // print(_login);
     return _login;
   }
 

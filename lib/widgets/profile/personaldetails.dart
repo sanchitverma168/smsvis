@@ -15,8 +15,8 @@ class PersonalDetails extends StatelessWidget {
         lastDate: DateTime(2260));
     if (dt != null && dt != selectedDate) {
       selectedDate = dt;
-      print("$dt");
-      print("$selectedDate");
+      // print("$dt");
+      // print("$selectedDate");
     }
   }
 

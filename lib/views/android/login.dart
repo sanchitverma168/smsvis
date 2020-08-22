@@ -1,7 +1,9 @@
 import 'package:Smsvis/providers/routehandler.dart';
 import 'package:Smsvis/widgets/loginpage/bezierContainer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -31,25 +33,25 @@ class _LoginPageState extends State<LoginPage> {
   String email, password, message;
   Future<void> onlogin() async {
     final form = _formloginKey.currentState;
-    print("onlogin");
+    // print("onlogin");
     if (form.validate()) {
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
         processing = true;
         setState(() {});
-        print("validation correct");
+        // print("validation correct");
         var result = await Provider.of<RouteHandler>(context, listen: false)
             .login(email, password);
         if (result == false) {
           processing = false;
           showerrorbox = true;
-          print(showerrorbox);
+          // print(showerrorbox);
           message = "Invalid Credentials";
           updateErrorBox();
           setState(() {});
         }
-        print(showerrorbox);
+        // print(showerrorbox);
       } else {
         Toast.show("No Internet Connection", context,
             gravity: 2,
@@ -72,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _askPermissions() async {
     var status = await Permission.contacts.status;
-    print(status);
+    // print(status);
     if (status.isUndetermined ||
         status.isDenied ||
         status.isPermanentlyDenied ||
@@ -82,15 +84,15 @@ class _LoginPageState extends State<LoginPage> {
         Permission.storage,
         Permission.notification
       ].request();
-      print(statuses[Permission.contacts]);
+      // print(statuses[Permission.contacts]);
 
       if (status.isUndetermined ||
           status.isDenied ||
           status.isPermanentlyDenied ||
           status.isRestricted) {
-        print("inside pop context");
+        // print("inside pop context");
       }
-      print("hello");
+      // print("hello");
     }
   }
 
@@ -153,6 +155,17 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Widget applogo() {
+    return Align(
+        alignment: Alignment.center,
+        child: Container(
+          color: Colors.transparent,
+          height: MediaQuery.of(context).size.height * 0.15,
+          width: MediaQuery.of(context).size.height * 0.55,
+          child: Image.asset("assets/icon/app_icon.jpg"),
+        ));
   }
 
   Widget _title() {
@@ -225,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
         style: TextStyle(
             color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold),
       );
-      print("error text box enabled");
+      // print("error text box enabled");
     }
   }
 
@@ -248,13 +261,13 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: height * .2),
-                  _title(),
+                  SizedBox(height: height * 0.2),
+                  applogo(),
+                  // _title(),
                   progressonlogin(),
-                  msg == null ? SizedBox(height: 50) : SizedBox(height: 30),
+                  msg == null ? SizedBox(height: 30) : SizedBox(height: 10),
                   msg == null ? SizedBox(height: 0) : _errorBox,
 
-                  SizedBox(height: 50),
                   Form(
                     key: _formloginKey,
                     child: _emailPasswordWidget(),

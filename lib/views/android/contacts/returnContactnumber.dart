@@ -59,7 +59,7 @@ class _ReturnContactState extends State<ReturnContact> {
       }
       if (i == maxindex) break;
     }
-    print("output done");
+    //  print("output done");
   }
 
   updateleadingicon(index) {
@@ -116,9 +116,9 @@ class _ReturnContactState extends State<ReturnContact> {
                   Contact c = _contacts?.elementAt(index);
                   return ListTile(
                     onTap: () {
-                      print("working");
+                      // print("working");
                       updateleadingicon(index);
-                      print(activedisabled[index]);
+                      // print(activedisabled[index]);
                     },
                     leading: CircleAvatar(child: Text(c.initials())),
                     title: Text(c.displayName ?? ""),

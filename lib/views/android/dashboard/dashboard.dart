@@ -101,7 +101,7 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
                   case PageControl.HELP:
                     return HelpMe();
                   default:
-                    print("default");
+                    // print("default");
                     return QuickSend();
                 }
               },

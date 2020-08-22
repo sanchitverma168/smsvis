@@ -44,12 +44,12 @@ class _BottomToolsState extends State<BottomTools> {
               OutlineButton(
                 onPressed: () {
                   var sContacts = ic.deviceContacts;
-                  print("1");
+                  // print("1");
                   // convertnumbertostring();
                   for (int i = 0; i < sContacts.length; i++) {
-                    print("2");
+                    // print("2");
                     if (ic.selectedContactsindex[i] == 1) {
-                      print("3");
+                      // print("3");
                       if (sContacts[i].phones.toList().length != 0) {
                         String name = sContacts[i].displayName;
                         String number =
@@ -60,12 +60,12 @@ class _BottomToolsState extends State<BottomTools> {
                             type: ContactType.isphone.toString());
                         qsp.phoneContacts = 1;
                       }
-                      print("4");
-                      print("5");
+                      // print("4");
+                      // print("5");
                     }
-                    print("6");
+                    // print("6");
                   }
-                  print("7");
+                  // print("7");
 
                   // for (int i = 0; i < selectedContacts.length; i++)
                   //   qsp.addContact(
@@ -74,7 +74,7 @@ class _BottomToolsState extends State<BottomTools> {
                   //       notify: false);
                   // qsp.removeextracharfromnumbr();
                   qsp.getbacktosendmessageScreen();
-                  print("8");
+                  // print("8");
                 },
                 child: Text("Import"),
               )

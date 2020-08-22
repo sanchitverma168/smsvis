@@ -31,7 +31,7 @@ class Router extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<RouteHandler>(
       builder: (context, user, child) {
-        print(user.status);
+        // print(user.status);
         switch (user.status) {
           case Status.Uninitialized:
             return AndroidLoading();

@@ -29,11 +29,11 @@ Map errorCode = {
 };
 List<String> senderid = [
   'Select Sender ID',
-  'DEMAPI',
-  'DEMOID',
-  'smsvis',
-  'id 4',
-  'id 5',
+  // 'DEMAPI',
+  // 'DEMOID',
+  'SMSVIS',
+  // 'id 4',
+  // 'id 5',
 ];
 
 class QuickSendProvider with ChangeNotifier {
@@ -124,12 +124,12 @@ class QuickSendProvider with ChangeNotifier {
   }
 
   importCSVFILE(BuildContext context) async {
-    print("${_selectedContact.length} + csv");
+    // print("${_selectedContact.length} + csv");
     File file = await FilePicker.getFile(allowCompression: false);
     if (file != null) {
       String name = file.path.split('/').last;
       String ext = file.path.split('.').last;
-      print(name + ext);
+      // print(name + ext);
       for (int i = 0; i < filename.length; i++) {
         if (filename[i] == name) {
           Toast.show("File Already Imported", context);
@@ -157,13 +157,13 @@ class QuickSendProvider with ChangeNotifier {
             number: number,
             type: ContactType.isfile.toString());
 
-        print('$number');
+        // print('$number');
         _fileContacts += 1;
       }, onDone: () {
         filename.add(name);
-        print('File is now closed.');
+        // print('File is now closed.');
       }, onError: (e) {
-        print(e.toString());
+        // print(e.toString());
       });
     }
 
@@ -184,6 +184,24 @@ class QuickSendProvider with ChangeNotifier {
     mcontacts["number"] = number;
     mcontacts["type"] = type;
     lcontacts.add(mcontacts);
+  }
+
+  maketendigitnumber({@required String number}) {
+    if (number.length != 10)
+      return number = number
+          .split("91")
+          .join()
+          .split(" ")
+          .join()
+          .split("-")
+          .join()
+          .split("(")
+          .join()
+          .split(")")
+          .join()
+          .split("+")
+          .join();
+    return number;
   }
 
   removeextracharfromnumbr() {
@@ -288,14 +306,14 @@ class QuickSendProvider with ChangeNotifier {
     if (!RegExp("[^\s\S\w():,.<>?\/\'a-zA-Z0-9{}:;\"')(-_=+*&^%\$#@!~]",
             multiLine: true, caseSensitive: false)
         .hasMatch(value.split(" ").join(""))) {
-      print(" English");
+      // print(" English");
       msgCount = (l ~/ maxEnglishChars).toInt();
       charleft = maxEnglishChars - (l - (msgCount * maxEnglishChars));
       msgCount++;
       notifyListeners();
       return;
     } else {
-      print("Non English");
+      // print("Non English");
       msgCount = (l ~/ maxNonEnglishChars).toInt();
       charleft = maxNonEnglishChars - (l - (msgCount * maxNonEnglishChars));
       msgCount++;
@@ -308,6 +326,8 @@ class QuickSendProvider with ChangeNotifier {
     phoneContacts = 0;
     _fileContacts = 0;
     typeContacts = 0;
+    _typeContacts = 0;
+    lcontacts.clear();
 
     // _fileContacts.clear();
     msgCount = 0;
@@ -334,7 +354,7 @@ class QuickSendProvider with ChangeNotifier {
     if (msgresponse.status == errorCode[ErrorType.INCORRECT_LOGIN]) {
       // _errortext = msgresponse.statusMessage;
       seterror(true, errorText: msgresponse.statusMessage);
-      print("incorrect login");
+      // print("incorrect login");
     } else if (msgresponse.status == errorCode[ErrorType.MESSGE_ACCEPTED]) {
       // _errortext = msgresponse.statusMessage;
       seterror(true, color: Colors.green, errorText: msgresponse.statusMessage);
@@ -343,7 +363,7 @@ class QuickSendProvider with ChangeNotifier {
         errorCode[ErrorType.SENDER_ID_DONT_MATCH]) {
       // _errortext = msgresponse.statusMessage;
       seterror(true, errorText: msgresponse.statusMessage);
-      print("don't match");
+      // print("don't match");
     }
 
     notifyListeners();
@@ -361,11 +381,11 @@ class QuickSendProvider with ChangeNotifier {
   }
 
   validateusernumberentered(String value) {
-    print("hee");
+    // print("hee");
     if (!isNumberorComma(value)) {
       return seterror(true, errorText: "Not Supported");
     }
-    print(isNumberLengthCorrect(value));
+    // print(isNumberLengthCorrect(value));
     if (!isNumberLengthCorrect(value)) {
       return seterror(true, errorText: "Enter Valid Numbers");
     }
@@ -382,26 +402,26 @@ class QuickSendProvider with ChangeNotifier {
     var r = true;
     int count = 0;
     List<String> numbers = value.split(",");
-    print("1");
+    // print("1");
     numbers.forEach((element) {
-      print("2");
+      // print("2");
       if (element.length != 10 &&
           element != " " &&
           element != null &&
           element.length != 0) {
-        print("3");
+        // print("3");
         return r = false;
       } else
         count += 1;
-      print("4");
+      // print("4");
 
       r = true;
     });
-    print("5");
+    // print("5");
     typeContacts = count;
-    print("6");
-    if (r) print(numbers.length);
-    print("7");
+    // print("6");
+    // if (r) print(numbers.length);
+    // print("7");
     return r;
     // return true;
   }

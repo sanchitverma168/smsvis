@@ -18,7 +18,7 @@ class _HelpMeState extends State<HelpMe> {
 
   void response(query) async {
     _textController.clear();
-    print(query);
+    // print(query);
     // AuthGoogle authGoogle =
     //     await AuthGoogle(fileJson: "assets/credentialsDialogFlow.json").build();
     // Dialogflow dialogflow =
@@ -49,7 +49,7 @@ class _HelpMeState extends State<HelpMe> {
       type: true,
     );
     int len = _messages.length;
-    print(len);
+    // print(len);
     setState(() {
       _messages.insert(len, message);
     });

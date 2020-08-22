@@ -79,7 +79,7 @@ class ImportContact with ChangeNotifier {
   }
 
   updateindex(int index) {
-    print("inside $index");
+    // print("inside $index");
     if (_selectedContactsindex[index] == 1) {
       _selectedContactsindex[index] = 0;
       _countContacts--;
@@ -114,60 +114,60 @@ class ImportContact with ChangeNotifier {
   }
 
   search(String value) {
-    print("abc");
-    print("1");
+    // print("abc");
+    // print("1");
     _showContacts.clear();
-    print("2");
-    print(_searchContactsIndex);
+    // print("2");
+    // print(_searchContactsIndex);
     _showContacts = new List();
     _searchContactsIndex != null ?? _searchContactsIndex.clear();
-    print("3");
-    print(_searchContactsIndex);
+    // print("3");
+    // print(_searchContactsIndex);
     _searchContactsIndex = new List();
     _searchedContacts != null ?? _searchedContacts.clear();
-    print("4");
+    // print("4");
 
     _searchedContacts = new List();
     for (int i = 0; i < _deviceContacts.length; i++) {
-      print("5");
+      // print("5");
       Contact c = _deviceContacts[i];
-      print("5a");
+      // print("5a");
       String displayName = c.displayName.toLowerCase();
-      print("5b");
+      // print("5b");
       if (c.phones.toList().length != 0) {
         String number = c.phones.toList().first.value;
-        print("5c");
+        // print("5c");
         if (displayName.contains(value) || number.contains(value)) {
-          print("5e");
-          print("i ${_searchedContacts.length}");
+          // print("5e");
+          // print("i ${_searchedContacts.length}");
           _searchedContacts.add(c);
-          print("i ${_searchedContacts.length}");
+          // print("i ${_searchedContacts.length}");
 
-          print("5f");
+          // print("5f");
           _searchContactsIndex.add(i);
-          print("5g");
+          // print("5g");
         }
       }
-      print("5h");
+      // print("5h");
     }
-    print("6");
+    // print("6");
     if (_searchedContacts.length > 0) {
-      print("7");
+      // print("7");
       _screenContent = ScreenContent.isSearchContacts;
-      print("8");
+      // print("8");
       _showContacts.addAll(_searchedContacts);
-      print("9");
+      // print("9");
     } else
       _screenContent = ScreenContent.isNoContactFound;
-    print("10");
+    // print("10");
     if (value.length == 0) {
-      print("11");
+      // print("11");
       _screenContent = ScreenContent.isDeviceContacts;
       screenUpdate(_deviceContacts);
     }
-    print("12");
-    print(_screenContent);
-    print(_searchContactsIndex.length);
+    // print("12");
+    // print(_screenContent);
+    // print(_searchContactsIndex.length);
     notifyListeners();
   }
 
