@@ -1,7 +1,6 @@
 import 'package:Smsvis/database/entities/blacklistNumber.dart';
 import 'package:Smsvis/utils/variables.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:Smsvis/database/db.dart';
 

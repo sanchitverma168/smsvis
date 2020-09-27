@@ -1,5 +1,6 @@
 import 'package:Smsvis/providers/routehandler.dart';
 import 'package:Smsvis/views/android/dashboard/dashboard.dart';
+import 'package:Smsvis/views/android/error.dart';
 import 'package:Smsvis/views/android/loading.dart';
 import 'package:Smsvis/views/android/login.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,8 @@ class Router extends StatelessWidget {
             );
           case Status.Authenticated:
             return AndroidDashboard();
+          case Status.NOINTERNETCONNECTION:
+            return ErrorPage();
           default:
             return LoginPage(title: "LoginPage");
         }

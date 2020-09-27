@@ -1,10 +1,7 @@
 import 'package:Smsvis/providers/routehandler.dart';
 import 'package:Smsvis/widgets/loginpage/bezierContainer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -74,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _askPermissions() async {
     var status = await Permission.contacts.status;
-    // print(status);
     if (status.isUndetermined ||
         status.isDenied ||
         status.isPermanentlyDenied ||
@@ -86,11 +82,14 @@ class _LoginPageState extends State<LoginPage> {
       ].request();
       // print(statuses[Permission.contacts]);
 
-      if (status.isUndetermined ||
-          status.isDenied ||
-          status.isPermanentlyDenied ||
-          status.isRestricted) {
+      if (status.isUndetermined ==
+              statuses[Permission.contacts].isUndetermined ||
+          status.isDenied == statuses[Permission.contacts].isDenied ||
+          status.isPermanentlyDenied ==
+              statuses[Permission.contacts].isPermanentlyDenied ||
+          status.isRestricted == statuses[Permission.contacts].isRestricted) {
         // print("inside pop context");
+        Permission.contacts.request();
       }
       // print("hello");
     }
@@ -168,25 +167,25 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'sms',
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.headline4,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
-          ),
-          children: [
-            TextSpan(
-              text: 'vis',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-          ]),
-    );
-  }
+  // Widget _title() {
+  //   return RichText(
+  //     textAlign: TextAlign.center,
+  //     text: TextSpan(
+  //         text: 'sms',
+  //         style: GoogleFonts.portLligatSans(
+  //           textStyle: Theme.of(context).textTheme.headline4,
+  //           fontSize: 30,
+  //           fontWeight: FontWeight.w700,
+  //           color: Color(0xffe46b10),
+  //         ),
+  //         children: [
+  //           TextSpan(
+  //             text: 'vis',
+  //             style: TextStyle(color: Colors.black, fontSize: 30),
+  //           ),
+  //         ]),
+  //   );
+  // }
 
   Widget _emailPasswordWidget() {
     return Column(

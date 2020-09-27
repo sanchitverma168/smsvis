@@ -2,10 +2,17 @@ import 'dart:convert';
 
 import 'package:Smsvis/models/api.dart';
 import 'package:Smsvis/models/quicksendresponse.dart';
+import 'package:Smsvis/utils/internetconnection.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:flutter/cupertino.dart';
 
-enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
+enum Status {
+  Uninitialized,
+  Authenticated,
+  Authenticating,
+  Unauthenticated,
+  NOINTERNETCONNECTION
+}
 enum ErrorType { INCORRECT_LOGIN, LOGIN_SUCESS }
 Map msg = {
   ErrorType.INCORRECT_LOGIN: "Incorrect Login",
@@ -27,9 +34,16 @@ class RouteHandler with ChangeNotifier {
   String get responsemsg => _responsemsg;
 
   initAuthProvider() async {
+    print("hello");
     _status = await SharedData().islogin()
         ? Status.Authenticated
         : Status.Unauthenticated;
+    if (!await InternetConnection().isConnected())
+      _status = Status.NOINTERNETCONNECTION;
+    notifyListeners();
+  }
+
+  updatepage() {
     notifyListeners();
   }
 

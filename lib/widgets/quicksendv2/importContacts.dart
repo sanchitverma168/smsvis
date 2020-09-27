@@ -1,5 +1,5 @@
-import 'package:Smsvis/providers/quicksendprovider.dart';
-import 'package:Smsvis/views/android/contacts/saveContacts.dart';
+import 'package:Smsvis/providers/quicksendprovider_v2.dart';
+import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/views/android/contacts/viewfavouritelist.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,10 +9,10 @@ class ImportContacts extends StatelessWidget {
   final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18.0),
       side: BorderSide(color: Colors.white));
-  final color = QuickSendProvider().fcolor;
+  final color = UIColors.fcolor;
   @override
   Widget build(BuildContext context) {
-    final qsp = Provider.of<QuickSendProvider>(context, listen: false);
+    final qsp = Provider.of<QuickSendProviderV2>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
@@ -32,10 +32,10 @@ class ImportContacts extends StatelessWidget {
             color: color,
             onPressed: () {
               qsp.showimportbutton = !qsp.showimportbutton;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SaveContacts(qsp.contacts)));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => SaveContacts(qsp.contacts)));
             },
             child: Text(
               "Save Contacts",
@@ -67,7 +67,7 @@ class ImportContacts extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
                 side: BorderSide(color: Colors.white)),
-            color: QuickSendProvider().fcolor,
+            color: UIColors.fcolor,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => FavouriteListView()));

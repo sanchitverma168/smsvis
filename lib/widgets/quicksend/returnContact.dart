@@ -1,5 +1,5 @@
 import 'package:Smsvis/providers/importContact.dart';
-import 'package:Smsvis/widgets/importContact/bottomTools.dart';
+import 'package:Smsvis/widgets/importContactV2/bottomTools.dart';
 import 'package:Smsvis/widgets/importContact/cantreadcontacts.dart';
 import 'package:Smsvis/widgets/importContact/deviceContacts.dart';
 import 'package:Smsvis/widgets/importContact/nocontactfound.dart';

@@ -11,10 +11,6 @@ class DisplayContentData extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(label),
-          // Chip(
-          //   label: Text(count.toString()),
-          //   backgroundColor: Colors.orange[100],
-          // ),
           Text(count.toString()),
         ]);
   }

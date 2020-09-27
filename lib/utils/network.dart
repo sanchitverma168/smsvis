@@ -47,7 +47,7 @@ class Network {
   }
 
   Future sendmsg() async {
-    // print('Calling uri:$url');
+    print('Calling uri:$url');
     Response response = await get(url);
     return response.body;
   }

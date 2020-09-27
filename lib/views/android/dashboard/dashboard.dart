@@ -1,5 +1,10 @@
+import 'package:Smsvis/models/api.dart';
+import 'package:Smsvis/providers/currentdaymis.dart';
+import 'package:Smsvis/providers/detailreport.dart';
+import 'package:Smsvis/providers/quicksendprovider_v2.dart';
+import 'package:Smsvis/utils/variables.dart';
+import 'package:Smsvis/models/fetchallsendeerid.dart';
 import 'package:Smsvis/providers/handle_main_drawer_activity.dart';
-import 'package:Smsvis/providers/quicksendprovider.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/views/android/contacts/viewfavouritelist.dart';
 import 'package:Smsvis/views/android/dashboard/help.dart';
@@ -13,8 +18,9 @@ import 'package:Smsvis/views/android/dashboard/views/general.dart';
 import 'package:Smsvis/views/android/dashboard/views/misreport.dart';
 import 'package:Smsvis/views/android/dashboard/views/myaccounttemplate.dart';
 import 'package:Smsvis/views/android/dashboard/views/profile.dart';
-import 'package:Smsvis/views/android/dashboard/views/quicksend.dart';
+import 'package:Smsvis/views/android/dashboard/views/quickSend_v2.dart';
 import 'package:Smsvis/views/android/dashboard/views/scheduled_sms.dart';
+import 'package:Smsvis/views/android/error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,16 +33,28 @@ class AndroidDashboard extends StatefulWidget {
 
 class _AndroidDashboardState extends State<AndroidDashboard> {
   String u;
+  Credits credits;
+  List<SenderId> senderid;
+
   @override
   void initState() {
     getusername();
-    // subscribetotopicfornotification();
-
     super.initState();
+  }
+
+  fetchuserdata(u) async {
+    var creditsjson;
+    // senderidjson = await API().fetchdata(u, Type.SenderID);
+    // print(senderidjson);
+    creditsjson = await API().fetchdata(u, TypeData.Credits);
+    print(creditsjson);
+    credits = creditsFromMap(creditsjson);
+    // senderid = senderIdFromMap(senderidjson);
   }
 
   getusername() async {
     u = await SharedData().username;
+    fetchuserdata(u);
   }
 
   @override
@@ -63,25 +81,30 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
             ),
             drawer:
                 Consumer<HandleDrawerActivity>(builder: (context, user, child) {
-              return SideDrawer(u);
+              print("rebuild data");
+              return SideDrawer(u, credits.creditLeft);
             }),
             body: Consumer<HandleDrawerActivity>(
               builder: (context, user, child) {
                 switch (user.page) {
                   case PageControl.QUICK_SEND:
                     return ChangeNotifierProvider(
-                      create: (context) => QuickSendProvider(),
-                      child: QuickSend(),
+                      create: (context) => QuickSendProviderV2(),
+                      child: QuickSendV2(),
                     );
 
                   case PageControl.SCHEDULED_SMS:
                     return Scheduledsms();
                   case PageControl.CURRENT_DAY_MIS:
-                    return CurrentDayMIS();
+                    return ChangeNotifierProvider(
+                        create: (context) => CurrentDayMISProvider(),
+                        child: CurrentDayMIS());
                   case PageControl.MIS_REPORT:
                     return MISReport();
                   case PageControl.DETAIL_REPORT:
-                    return DetailReport();
+                    return ChangeNotifierProvider(
+                        create: (context) => DetailReportProvider(),
+                        child: DetailReport());
                   case PageControl.FILE_UPLOAD_STATUS:
                     return FileUploadStatus();
                   case PageControl.DOWNLOAD_CENTRE:
@@ -100,9 +123,11 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
                     return Profile();
                   case PageControl.HELP:
                     return HelpMe();
+                  case PageControl.Error:
+                    return ErrorPage();
                   default:
                     // print("default");
-                    return QuickSend();
+                    return QuickSendV2();
                 }
               },
             ),

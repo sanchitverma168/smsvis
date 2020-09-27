@@ -1,26 +1,26 @@
 import 'package:Smsvis/providers/importContact.dart';
-import 'package:Smsvis/providers/quicksendprovider.dart';
-import 'package:Smsvis/widgets/quicksend/msgSendpage.dart';
+import 'package:Smsvis/providers/quicksendprovider_v2.dart';
 import 'package:Smsvis/widgets/quicksend/returnContact.dart';
-import 'package:provider/provider.dart';
+import 'package:Smsvis/widgets/quicksendv2/messagesend.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class QuickSend extends StatelessWidget {
-  QuickSend({Key key}) : super(key: key);
+class QuickSendV2 extends StatelessWidget {
+  const QuickSendV2({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<QuickSendProvider>(builder: (context, user, child) {
-      switch (user.display) {
+    return Consumer<QuickSendProviderV2>(builder: (context, value, child) {
+      switch (value.display) {
         case Display.PHONECONTACTS:
           return ChangeNotifierProvider(
             create: (context) => ImportContact(),
             child: ReturnContactQuickSendWidget(),
           );
         case Display.SENDMESSAGE:
-          return MessageSendPage();
+          return MessageSend();
         default:
-          return MessageSendPage();
+          return MessageSend();
       }
     });
   }

@@ -1,3 +1,4 @@
+import 'package:Smsvis/models/fetchallsendeerid.dart';
 import 'package:Smsvis/models/quicksendresponse.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
@@ -16,7 +17,8 @@ enum PageControl {
   TEMPLATE,
   GENERAL,
   PROFILE,
-  HELP
+  HELP,
+  Error
 }
 
 List<String> pagecontrol = [
@@ -32,8 +34,9 @@ List<String> pagecontrol = [
   "Credit History",
   "Template",
   "General",
-  "Profile"
+  "Profile",
 ];
+String senderidfirst = "Select Sender ID";
 
 class HandleDrawerActivity with ChangeNotifier {
   List<Color> _maincolor = [Color(0xfffbb448), Color(0xfff7892b)];
@@ -50,6 +53,27 @@ class HandleDrawerActivity with ChangeNotifier {
   String get pagetitle => _pagetitle;
 
   String get responsemsg => _errormsg;
+  int _credit = 0;
+  int get credit => _credit;
+  setcredit(value, {bool notify = true}) {
+    _credit = value;
+    if (notify) notifyListeners();
+  }
+
+  List<String> _senderid = new List();
+  List<String> get senderid => _senderid;
+  Future setsenderid(List<SenderId> id) {
+    print("hello");
+    senderid.add(senderidfirst);
+    for (int i = 0; i < id.length; i++) {
+      senderid.add(id[i].senderid);
+    }
+    return null;
+  }
+
+  List<String> localsenderid = ["Select Sender ID", "No ID Found"];
+  // --------------- start of functions
+
   swtichpage(PageControl page) {
     switch (page) {
       case PageControl.QUICK_SEND:
@@ -108,10 +132,13 @@ class HandleDrawerActivity with ChangeNotifier {
         _page = PageControl.HELP;
         _pagetitle = pagecontrol[13];
         break;
+      case PageControl.Error:
+        _page = PageControl.Error;
+        _pagetitle = "No Internet";
+        break;
       default:
         _pagetitle = pagecontrol.first;
         _page = PageControl.QUICK_SEND;
-        _pagetitle = pagecontrol[0];
         break;
     }
     notifyListeners();

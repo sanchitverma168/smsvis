@@ -1,11 +1,15 @@
+import 'package:Smsvis/providers/detailreport.dart';
+import 'package:Smsvis/utils/stringtext.dart';
+import 'package:Smsvis/widgets/detailreport/carddata/columncontent.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DetailReportCardData extends StatelessWidget {
   const DetailReportCardData({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int maxdata = 100;
+    final drp = Provider.of<DetailReportProvider>(context, listen: false);
     List<String> columnname = [
       "Mobile",
       "Text",
@@ -23,7 +27,8 @@ class DetailReportCardData extends StatelessWidget {
       "	Delivered to Handset"
     ];
     return ListView.builder(
-        itemCount: maxdata,
+        reverse: true,
+        itemCount: drp.jsondataistoRepresent.message.length,
         itemBuilder: (BuildContext context, int index) {
           return Padding(
             padding: const EdgeInsets.all(3.0),
@@ -38,45 +43,25 @@ class DetailReportCardData extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        for (int i = 0; i < 3; i++)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "${columnname[i]}:",
-                                style: TextStyle(fontWeight: FontWeight.w300),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: Text(
-                                    "${celldata[i]}",
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                        ColumnContent(TextData.mobile,
+                            drp.jsondataistoRepresent.message[index].mobile),
+                        ColumnContent(TextData.text,
+                            drp.jsondataistoRepresent.message[index].text),
+                        ColumnContent(TextData.msg_tag,
+                            drp.jsondataistoRepresent.message[index].msgTag)
                       ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        for (int i = 3; i < 6; i++)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                "${columnname[i]}:",
-                                style: TextStyle(fontWeight: FontWeight.w300),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Text("${celldata[i]}"),
-                              ),
-                            ],
-                          ),
+                        ColumnContent(
+                            TextData.sent_date,
+                            drp.jsondataistoRepresent.message[index].sentDate
+                                .toString()),
+                        ColumnContent(
+                            TextData.status_description,
+                            drp.jsondataistoRepresent.message[index]
+                                .finalStatus)
                       ],
                     )
                   ],

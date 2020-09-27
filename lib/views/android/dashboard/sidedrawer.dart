@@ -7,7 +7,9 @@ import '../settings/settings.dart';
 
 class SideDrawer extends StatelessWidget {
   final String username;
-  SideDrawer(this.username, {Key key}) : super(key: key);
+  final String credits;
+
+  SideDrawer(this.username, this.credits, {Key key}) : super(key: key);
 
   getpage(PageControl page, BuildContext context) async {
     Navigator.pop(context);
@@ -56,12 +58,20 @@ class SideDrawer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Credits: 12",
+                    // "Credits: ${credits.creditLeft}",
+                    "Credits: $credits",
+
                     style: TextStyle(
-                        color: Colors.red,
+                        color: Colors.redAccent,
                         fontSize: 18,
                         fontWeight: FontWeight.bold),
-                  )
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.refresh),
+                      onPressed: () {
+                        Provider.of<RouteHandler>(context, listen: false)
+                            .updatepage();
+                      })
                 ],
               ),
             ),
@@ -78,7 +88,7 @@ class SideDrawer extends StatelessWidget {
                 ListTile(
                   title: Text("Scheduled SMS"),
                   onTap: () async {
-                    getpage(PageControl.SCHEDULED_SMS, context);
+                    getpage(PageControl.Error, context);
                   },
                 ),
               ],
