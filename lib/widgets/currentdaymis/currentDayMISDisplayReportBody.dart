@@ -10,7 +10,6 @@ class CurrentDayMISDisplayReportBody extends StatelessWidget {
   Widget build(BuildContext context) {
     var cdp =
         Provider.of<CurrentDayMISDisplayReportProvider>(context, listen: false);
-    cdp.setwidgetlist();
     var data = cdp.currentDayMISDisplayReport.message;
     return Column(children: [
       Expanded(

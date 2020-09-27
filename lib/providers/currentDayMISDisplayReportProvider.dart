@@ -58,13 +58,5 @@ class CurrentDayMISDisplayReportProvider extends ChangeNotifier {
     for (int i = 0; i < currentMax; i++) {
       _widgetlist.add(Text("Hello"));
     }
-    var l = Logger();
-
-    l.i(currentDayMISDisplayReport.message.toList());
-  }
-
-  setwidgetlist() {
-    var data = currentDayMISDisplayReport.message;
-    var bodyLength = data.length;
   }
 }
