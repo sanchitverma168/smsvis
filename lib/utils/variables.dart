@@ -4,8 +4,10 @@ const app = "sms_app_app/";
 const baseURL = "http://49.50.64.162/API/index?";
 const databaseName = "app_database.db";
 const loginURL = "http://49.50.64.162/sms_app_app/login.php?";
-
 // http://49.50.64.162/sms_app_app/login.php?user_id=demo_app&password=7c9519bd83
+
+// http://49.50.64.162/sms_app_app/mail_api.php?user_name=Ravi kumar&mobile=7007695081&email=sanchit.verma.167@gmail.com&location=Lucknow
+const registerURL = "mail_api.php";
 
 const getsenderidURL =
     "http://49.50.64.162/sms_app_app/api_senderid.php?user_id=";

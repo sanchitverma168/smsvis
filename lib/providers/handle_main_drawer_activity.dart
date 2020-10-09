@@ -1,4 +1,3 @@
-import 'package:Smsvis/models/fetchallsendeerid.dart';
 import 'package:Smsvis/models/quicksendresponse.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
@@ -18,7 +17,8 @@ enum PageControl {
   GENERAL,
   PROFILE,
   HELP,
-  Error
+  Error,
+  Dashboard
 }
 
 List<String> pagecontrol = [
@@ -35,8 +35,9 @@ List<String> pagecontrol = [
   "Template",
   "General",
   "Profile",
+  "Help",
+  "Dashboard"
 ];
-String senderidfirst = "Select Sender ID";
 
 class HandleDrawerActivity with ChangeNotifier {
   List<Color> _maincolor = [Color(0xfffbb448), Color(0xfff7892b)];
@@ -45,9 +46,9 @@ class HandleDrawerActivity with ChangeNotifier {
   Color get scolor => _maincolor[1];
 
   QuickSendResponse quickSendResponse = QuickSendResponse();
-  PageControl _page = PageControl.QUICK_SEND;
+  PageControl _page = PageControl.Dashboard;
 
-  String _pagetitle = pagecontrol.first;
+  String _pagetitle = pagecontrol.last;
   String _errormsg;
   PageControl get page => _page;
   String get pagetitle => _pagetitle;
@@ -60,22 +61,15 @@ class HandleDrawerActivity with ChangeNotifier {
     if (notify) notifyListeners();
   }
 
-  List<String> _senderid = new List();
-  List<String> get senderid => _senderid;
-  Future setsenderid(List<SenderId> id) {
-    print("hello");
-    senderid.add(senderidfirst);
-    for (int i = 0; i < id.length; i++) {
-      senderid.add(id[i].senderid);
-    }
-    return null;
-  }
-
   List<String> localsenderid = ["Select Sender ID", "No ID Found"];
   // --------------- start of functions
 
   swtichpage(PageControl page) {
     switch (page) {
+      case PageControl.Dashboard:
+        _page = PageControl.Dashboard;
+        _pagetitle = pagecontrol.last;
+        break;
       case PageControl.QUICK_SEND:
         _page = PageControl.QUICK_SEND;
         _pagetitle = pagecontrol.first;

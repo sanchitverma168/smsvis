@@ -1,4 +1,5 @@
 import 'package:Smsvis/providers/routehandler.dart';
+import 'package:Smsvis/views/android/register.dart';
 import 'package:Smsvis/widgets/loginpage/bezierContainer.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
     updateErrorBox();
     super.initState();
   }
+
+  bool isPassword = false;
 
   bool showerrorbox = false;
 
@@ -163,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
           color: Colors.transparent,
           height: MediaQuery.of(context).size.height * 0.15,
           width: MediaQuery.of(context).size.height * 0.55,
-          child: Image.asset("assets/icon/app_icon.jpg"),
+          child: Image.asset("assets/png/app_logo.png"),
         ));
   }
 
@@ -191,12 +194,12 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: <Widget>[
         _entryField("Username"),
-        _entryFieldPassword("Password", isPassword: true),
+        _entryFieldPassword("Password"),
       ],
     );
   }
 
-  Widget _entryFieldPassword(String title, {bool isPassword = false}) {
+  Widget _entryFieldPassword(String title) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -209,19 +212,30 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: 10,
           ),
-          TextFormField(
-            obscureText: isPassword,
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                fillColor: Color(0xfff3f3f4),
-                filled: true,
-                hintText: "Type Password"),
-            validator: (value) {
-              password = value.trim();
-              if (password.isEmpty) return "Enter Password";
-              return null;
-            },
-          )
+          Stack(children: [
+            TextFormField(
+              obscureText: isPassword,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  hintText: "Type Password"),
+              validator: (value) {
+                password = value.trim();
+                if (password.isEmpty) return "Enter Password";
+                return null;
+              },
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                  icon: Icon(Icons.remove_red_eye),
+                  onPressed: () {
+                    isPassword = !isPassword;
+                    setState(() {});
+                  }),
+            )
+          ])
         ],
       ),
     );
@@ -239,6 +253,21 @@ class _LoginPageState extends State<LoginPage> {
       );
       // print("error text box enabled");
     }
+  }
+
+  Widget _signup() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FlatButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Register()));
+              print("working");
+            },
+            child: Text("Don't have Account? Register"))
+      ],
+    );
   }
 
   @override
@@ -262,18 +291,16 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   SizedBox(height: height * 0.2),
                   applogo(),
-                  // _title(),
                   progressonlogin(),
                   msg == null ? SizedBox(height: 30) : SizedBox(height: 10),
                   msg == null ? SizedBox(height: 0) : _errorBox,
-
                   Form(
                     key: _formloginKey,
                     child: _emailPasswordWidget(),
                   ),
-                  // _errorBox,
                   SizedBox(height: 20),
                   _submitButton(),
+                  _signup(),
                 ],
               ),
             ),

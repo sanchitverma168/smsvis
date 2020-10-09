@@ -37,9 +37,7 @@ class Router extends StatelessWidget {
           case Status.Uninitialized:
             return AndroidLoading();
           case Status.Unauthenticated:
-            return LoginPage(
-              title: "LoginPage",
-            );
+            return LoginPage(title: "LoginPage");
           case Status.Authenticated:
             return AndroidDashboard();
           case Status.NOINTERNETCONNECTION:

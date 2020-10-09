@@ -33,8 +33,10 @@ class RouteHandler with ChangeNotifier {
   String _responsemsg = msg[ErrorType.LOGIN_SUCESS];
   String get responsemsg => _responsemsg;
 
+  bool registrationSuccess = false;
+  bool registrationError = false;
+
   initAuthProvider() async {
-    print("hello");
     _status = await SharedData().islogin()
         ? Status.Authenticated
         : Status.Unauthenticated;
@@ -53,9 +55,6 @@ class RouteHandler with ChangeNotifier {
     var response = await API().login(id, password);
     var jsondata = json.decode(response);
     var responsemsg = QuickSendResponse.fromJson(jsondata);
-    // print(responsemsg.status);
-    // print(responsemsg.statusMessage);
-
     if (responsemsg.status == errorCode[ErrorType.INCORRECT_LOGIN]) {
       _login = false;
       _responsemsg = msg[ErrorType.INCORRECT_LOGIN];
@@ -69,6 +68,20 @@ class RouteHandler with ChangeNotifier {
     }
     // print(_login);
     return _login;
+  }
+
+  Future<bool> register(
+      String fullname, String mobile, String email, String location) async {
+    var response = await API().register(fullname, mobile, email, location);
+    var jsondata = json.decode(response);
+    if (jsondata["status"] == 202.toString()) {
+      print("true status");
+      registrationSuccess = true;
+    } else
+      registrationError = true;
+
+    notifyListeners();
+    return true;
   }
 
   Future<void> logout() async {

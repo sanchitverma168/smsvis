@@ -16,6 +16,13 @@ class API {
     return (Network(url).sendmsg());
   }
 
+  Future<dynamic> register(
+      String fullname, String mobile, String email, String location) {
+    url =
+        "$server$app$registerURL?user_name=$fullname&mobile=$mobile&email=$email&location=$location";
+    return (Network(url).sendmsg());
+  }
+
   /// [startdate] and [enddate] for detailReport
   ///
   /// [msgGroupID] for Page DisplayReport in CurrentMISReport Page

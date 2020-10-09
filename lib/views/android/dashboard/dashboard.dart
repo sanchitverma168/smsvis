@@ -1,6 +1,7 @@
 import 'package:Smsvis/models/api.dart';
 import 'package:Smsvis/providers/currentdaymis.dart';
 import 'package:Smsvis/providers/detailreport.dart';
+import 'package:Smsvis/providers/misreport.dart';
 import 'package:Smsvis/providers/quicksendprovider_v2.dart';
 import 'package:Smsvis/utils/variables.dart';
 import 'package:Smsvis/models/fetchallsendeerid.dart';
@@ -8,6 +9,7 @@ import 'package:Smsvis/providers/handle_main_drawer_activity.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/views/android/contacts/viewfavouritelist.dart';
 import 'package:Smsvis/views/android/dashboard/help.dart';
+import 'package:Smsvis/views/android/dashboard/mainPage.dart';
 import 'package:Smsvis/views/android/dashboard/sidedrawer.dart';
 import 'package:Smsvis/views/android/dashboard/views/credithistory.dart';
 import 'package:Smsvis/views/android/dashboard/views/current__day_mis.dart';
@@ -21,6 +23,7 @@ import 'package:Smsvis/views/android/dashboard/views/profile.dart';
 import 'package:Smsvis/views/android/dashboard/views/quickSend_v2.dart';
 import 'package:Smsvis/views/android/dashboard/views/scheduled_sms.dart';
 import 'package:Smsvis/views/android/error.dart';
+import 'package:Smsvis/views/android/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +52,7 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
     creditsjson = await API().fetchdata(u, TypeData.Credits);
     print(creditsjson);
     credits = creditsFromMap(creditsjson);
+    setState(() {});
     // senderid = senderIdFromMap(senderidjson);
   }
 
@@ -81,54 +85,81 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
             ),
             drawer:
                 Consumer<HandleDrawerActivity>(builder: (context, user, child) {
-              print("rebuild data");
               return SideDrawer(u, credits.creditLeft);
             }),
             body: Consumer<HandleDrawerActivity>(
               builder: (context, user, child) {
+                Widget data;
                 switch (user.page) {
+                  case PageControl.Dashboard:
+                    if (credits == null) return AndroidLoading();
+                    return Dashboard(credits.creditLeft);
                   case PageControl.QUICK_SEND:
-                    return ChangeNotifierProvider(
-                      create: (context) => QuickSendProviderV2(),
-                      child: QuickSendV2(),
-                    );
-
+                    data = ChangeNotifierProvider(
+                        create: (context) => QuickSendProviderV2(),
+                        child: QuickSendV2());
+                    break;
                   case PageControl.SCHEDULED_SMS:
-                    return Scheduledsms();
+                    data = Scheduledsms();
+                    break;
                   case PageControl.CURRENT_DAY_MIS:
-                    return ChangeNotifierProvider(
+                    data = ChangeNotifierProvider(
                         create: (context) => CurrentDayMISProvider(),
                         child: CurrentDayMIS());
+                    break;
                   case PageControl.MIS_REPORT:
-                    return MISReport();
+                    data = ChangeNotifierProvider(
+                        create: (context) => MISReportProvider(),
+                        child: MISReport());
+                    break;
                   case PageControl.DETAIL_REPORT:
-                    return ChangeNotifierProvider(
+                    data = ChangeNotifierProvider(
                         create: (context) => DetailReportProvider(),
                         child: DetailReport());
+                    break;
                   case PageControl.FILE_UPLOAD_STATUS:
-                    return FileUploadStatus();
+                    data = FileUploadStatus();
+                    break;
                   case PageControl.DOWNLOAD_CENTRE:
-                    return DownloadCentre();
+                    data = DownloadCentre();
+                    break;
                   case PageControl.MANAGE_GROUP:
-                    return FavouriteListView();
+                    data = FavouriteListView();
+                    break;
                   // case PageControl.MANAGE_CONTACT:
                   //   return ManageContact();
                   case PageControl.CREDIT_HISTORY:
-                    return CreditHistory();
+                    data = CreditHistory();
+                    break;
                   case PageControl.TEMPLATE:
-                    return MyAccountTemplate();
+                    data = MyAccountTemplate();
+                    break;
                   case PageControl.GENERAL:
-                    return General();
+                    data = General();
+                    break;
                   case PageControl.PROFILE:
-                    return Profile();
+                    data = Profile();
+                    break;
                   case PageControl.HELP:
-                    return HelpMe();
+                    data = HelpMe();
+                    break;
                   case PageControl.Error:
-                    return ErrorPage();
+                    data = ErrorPage();
+                    break;
                   default:
-                    // print("default");
-                    return QuickSendV2();
+                    data = QuickSendV2();
                 }
+                return WillPopScope(
+                    onWillPop: () {
+                      var hdp = Provider.of<HandleDrawerActivity>(context,
+                          listen: false);
+                      if (hdp.pagetitle == PageControl.Dashboard.toString())
+                        Navigator.pop(context);
+                      else
+                        hdp.swtichpage(PageControl.Dashboard);
+                      return;
+                    },
+                    child: data);
               },
             ),
           ),
