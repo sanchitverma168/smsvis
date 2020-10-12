@@ -1,6 +1,6 @@
 import 'package:Smsvis/providers/quicksendprovider_v2.dart';
 import 'package:Smsvis/utils/colors.dart';
-import 'package:Smsvis/views/android/contacts/viewfavouritelist.dart';
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +9,7 @@ class ImportContacts extends StatelessWidget {
   final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18.0),
       side: BorderSide(color: Colors.white));
-  final color = UIColors.fcolor;
+  final color = Colors.white;
   @override
   Widget build(BuildContext context) {
     final qsp = Provider.of<QuickSendProviderV2>(context, listen: false);
@@ -20,61 +20,40 @@ class ImportContacts extends StatelessWidget {
           onPressed: () {
             qsp.resetform();
           },
-          child: Text(
-            "Reset",
-          ),
+          child: Text(TextData.reset, style: TextStyle(color: color)),
           shape: shape,
-          color: color,
+          color: UIColors.alertColor,
         ),
         new RaisedButton(
-            clipBehavior: Clip.antiAlias,
-            shape: shape,
-            color: color,
-            onPressed: () {
-              qsp.showimportbutton = !qsp.showimportbutton;
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => SaveContacts(qsp.contacts)));
-            },
-            child: Text(
-              "Save Contacts",
-            )),
+          clipBehavior: Clip.antiAlias,
+          shape: shape,
+          color: color,
+          onPressed: () async {
+            qsp.showimportbutton = !qsp.showimportbutton;
+            await qsp.importCSVFILE(context);
+          },
+          child: Text(
+            TextData.importCSVFile,
+            style: TextStyle(
+              color: UIColors.scolor,
+            ),
+          ),
+        ),
         new RaisedButton(
-            clipBehavior: Clip.antiAlias,
-            shape: shape,
-            color: color,
-            onPressed: () async {
-              qsp.showimportbutton = !qsp.showimportbutton;
-              await qsp.importCSVFILE(context);
-            },
-            child: Text(
-              "Import CSV File",
-            )),
-        new RaisedButton(
-            clipBehavior: Clip.antiAlias,
-            shape: shape,
-            color: color,
-            onPressed: () async {
-              qsp.showimportbutton = !qsp.showimportbutton;
-              await qsp.getcontactsfromphone(context);
-            },
-            child: Text(
-              "Import from Phone",
-            )),
-        new RaisedButton(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.white)),
-            color: UIColors.fcolor,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => FavouriteListView()));
-            },
-            child: Text(
-              "Favourite Contacts",
-            )),
+          clipBehavior: Clip.antiAlias,
+          shape: shape,
+          color: color,
+          onPressed: () async {
+            qsp.showimportbutton = !qsp.showimportbutton;
+            await qsp.getcontactsfromphone(context);
+          },
+          child: Text(
+            TextData.importFromPhone,
+            style: TextStyle(
+              color: UIColors.scolor,
+            ),
+          ),
+        ),
       ],
     );
   }

@@ -10,7 +10,6 @@ import 'package:Smsvis/widgets/detailreport/hintTextFirstPage.dart';
 import 'package:Smsvis/widgets/detailreport/loading.dart';
 import 'package:Smsvis/widgets/detailreport/nodatafound.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 
 enum ScreenContent { NoDataFound, HintText, DataReady, IsLoading }
 
@@ -60,24 +59,18 @@ class DetailReportProvider with ChangeNotifier {
 
   getDataFromServer(String startdate, String enddate) async {
     String username = await SharedData().username;
-    var l = Logger();
     screenContent = ScreenContent.IsLoading;
     setScreenContent();
     var data = await API().fetchdata(username, TypeData.DetailMISReport,
         startdate: startdate, enddate: enddate);
-    // l.i(data);
     var jsondata = json.decode(data);
     if (jsondata["status"] == 401.toString()) {
-      print("inside 401");
       screenContent = ScreenContent.NoDataFound;
     } else {
       jsondataistoRepresent = misDetailReportFromJson(data);
       dataReady = true;
-      print("inside else");
-      l.d(jsondataistoRepresent.message[0].toJson());
       screenContent = ScreenContent.DataReady;
     }
-
     setScreenContent();
   }
 }

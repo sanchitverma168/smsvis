@@ -1,3 +1,4 @@
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 
 class NoContactFound extends StatelessWidget {
@@ -7,7 +8,7 @@ class NoContactFound extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: Text("No Contact Found"),
+        child: Text(TextData.noContactFound),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Smsvis/providers/routehandler.dart';
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -28,12 +29,12 @@ class _ErrorPageState extends State<ErrorPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("No Internet Connection"),
-            Text("Check Your Internet"),
+            Text(TextData.noInternetConnection),
+            Text(TextData.checkYourInternet),
             OutlineButton(
               color: Colors.red,
               onPressed: () {
-                Toast.show("Retrying", context);
+                Toast.show(TextData.retrying, context);
                 showProgress = true;
                 Provider.of<RouteHandler>(context, listen: false)
                     .initAuthProvider();
@@ -43,7 +44,7 @@ class _ErrorPageState extends State<ErrorPage> {
                   setState(() {});
                 });
               },
-              child: Text("Retry"),
+              child: Text(TextData.retry),
             )
           ]),
     );
@@ -51,7 +52,6 @@ class _ErrorPageState extends State<ErrorPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("building");
     return Scaffold(
       body: Container(
         child: Center(

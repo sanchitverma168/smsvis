@@ -1,5 +1,6 @@
 import 'package:Smsvis/providers/routehandler.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,16 +15,17 @@ class AndroidLoading extends StatelessWidget {
     initAuthProvider(context);
     return Scaffold(
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            backgroundColor: Colors.red,
-          ),
-          Text("Loading...")
-        ],
-      )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              backgroundColor: Colors.red,
+            ),
+            Text(TextData.loading)
+          ],
+        ),
+      ),
     );
   }
 }

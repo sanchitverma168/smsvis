@@ -1,4 +1,4 @@
-import 'package:Smsvis/providers/credithistory.dart';
+import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/widgets/getdate.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class CreditHistory extends StatelessWidget {
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        backgroundColor: CreditHistoryProvider().scolor,
+        backgroundColor: UIColors.scolor,
         onPressed: () {},
         child: Icon(Icons.search),
       ),

@@ -3,6 +3,7 @@ import 'package:Smsvis/providers/currentdaymis.dart';
 import 'package:Smsvis/providers/detailreport.dart';
 import 'package:Smsvis/providers/misreport.dart';
 import 'package:Smsvis/providers/quicksendprovider_v2.dart';
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:Smsvis/utils/variables.dart';
 import 'package:Smsvis/models/fetchallsendeerid.dart';
 import 'package:Smsvis/providers/handle_main_drawer_activity.dart';
@@ -47,13 +48,16 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
 
   fetchuserdata(u) async {
     var creditsjson;
-    // senderidjson = await API().fetchdata(u, Type.SenderID);
-    // print(senderidjson);
-    creditsjson = await API().fetchdata(u, TypeData.Credits);
+    try {
+      creditsjson = await API().fetchdata(u, TypeData.Credits);
+      credits = creditsFromMap(creditsjson);
+    } catch (e) {
+      print(e + "On Credits Fetch Api --AndroidDashboardPage");
+      creditsjson = {"credit_left": "0"};
+      credits = creditsFromMap(creditsjson);
+    }
     print(creditsjson);
-    credits = creditsFromMap(creditsjson);
     setState(() {});
-    // senderid = senderIdFromMap(senderidjson);
   }
 
   getusername() async {
@@ -64,105 +68,149 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => HandleDrawerActivity()),
-        ],
-        child: SafeArea(
-          child: Scaffold(
-            appBar: AppBar(
-              title: Consumer<HandleDrawerActivity>(
-                builder: (context, user, child) {
-                  return Text(user.pagetitle);
-                },
-              ),
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: HandleDrawerActivity().maincolor)),
-              ),
-            ),
-            drawer:
-                Consumer<HandleDrawerActivity>(builder: (context, user, child) {
-              return SideDrawer(u, credits.creditLeft);
-            }),
-            body: Consumer<HandleDrawerActivity>(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => HandleDrawerActivity(),
+        ),
+      ],
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Consumer<HandleDrawerActivity>(
               builder: (context, user, child) {
-                Widget data;
-                switch (user.page) {
-                  case PageControl.Dashboard:
-                    if (credits == null) return AndroidLoading();
-                    return Dashboard(credits.creditLeft);
-                  case PageControl.QUICK_SEND:
-                    data = ChangeNotifierProvider(
-                        create: (context) => QuickSendProviderV2(),
-                        child: QuickSendV2());
-                    break;
-                  case PageControl.SCHEDULED_SMS:
-                    data = Scheduledsms();
-                    break;
-                  case PageControl.CURRENT_DAY_MIS:
-                    data = ChangeNotifierProvider(
-                        create: (context) => CurrentDayMISProvider(),
-                        child: CurrentDayMIS());
-                    break;
-                  case PageControl.MIS_REPORT:
-                    data = ChangeNotifierProvider(
-                        create: (context) => MISReportProvider(),
-                        child: MISReport());
-                    break;
-                  case PageControl.DETAIL_REPORT:
-                    data = ChangeNotifierProvider(
-                        create: (context) => DetailReportProvider(),
-                        child: DetailReport());
-                    break;
-                  case PageControl.FILE_UPLOAD_STATUS:
-                    data = FileUploadStatus();
-                    break;
-                  case PageControl.DOWNLOAD_CENTRE:
-                    data = DownloadCentre();
-                    break;
-                  case PageControl.MANAGE_GROUP:
-                    data = FavouriteListView();
-                    break;
-                  // case PageControl.MANAGE_CONTACT:
-                  //   return ManageContact();
-                  case PageControl.CREDIT_HISTORY:
-                    data = CreditHistory();
-                    break;
-                  case PageControl.TEMPLATE:
-                    data = MyAccountTemplate();
-                    break;
-                  case PageControl.GENERAL:
-                    data = General();
-                    break;
-                  case PageControl.PROFILE:
-                    data = Profile();
-                    break;
-                  case PageControl.HELP:
-                    data = HelpMe();
-                    break;
-                  case PageControl.Error:
-                    data = ErrorPage();
-                    break;
-                  default:
-                    data = QuickSendV2();
-                }
-                return WillPopScope(
-                    onWillPop: () {
-                      var hdp = Provider.of<HandleDrawerActivity>(context,
-                          listen: false);
-                      if (hdp.pagetitle == PageControl.Dashboard.toString())
-                        Navigator.pop(context);
-                      else
-                        hdp.swtichpage(PageControl.Dashboard);
-                      return;
-                    },
-                    child: data);
+                return Text(
+                  user.pagetitle,
+                );
               },
             ),
+            actions: [
+              Consumer<HandleDrawerActivity>(
+                builder: (context, user, child) {
+                  if (user.pagetitle != TextData.pageTitles.last)
+                    return InkWell(
+                      onTap: () {
+                        user.swtichpage(PageControl.Dashboard);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.arrow_back),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Text(TextData.pageTitles.last,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  return SizedBox();
+                },
+              ),
+            ],
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: HandleDrawerActivity().maincolor,
+                ),
+              ),
+            ),
           ),
-        ));
+          drawer: Consumer<HandleDrawerActivity>(
+            builder: (context, user, child) {
+              return SideDrawer(u, credits.creditLeft);
+            },
+          ),
+          body: Consumer<HandleDrawerActivity>(
+            builder: (context, user, child) {
+              Widget data;
+              switch (user.page) {
+                case PageControl.Dashboard:
+                  if (credits == null) return AndroidLoading();
+                  return Dashboard(credits.creditLeft);
+                case PageControl.QUICK_SEND:
+                  data = ChangeNotifierProvider(
+                    create: (context) => QuickSendProviderV2(),
+                    child: QuickSendV2(),
+                  );
+                  break;
+                case PageControl.SCHEDULED_SMS:
+                  data = Scheduledsms();
+                  break;
+                case PageControl.CURRENT_DAY_MIS:
+                  data = ChangeNotifierProvider(
+                    create: (context) => CurrentDayMISProvider(),
+                    child: CurrentDayMIS(),
+                  );
+                  break;
+                case PageControl.MIS_REPORT:
+                  data = ChangeNotifierProvider(
+                    create: (context) => MISReportProvider(),
+                    child: MISReport(),
+                  );
+                  break;
+                case PageControl.DETAIL_REPORT:
+                  data = ChangeNotifierProvider(
+                    create: (context) => DetailReportProvider(),
+                    child: DetailReport(),
+                  );
+                  break;
+                case PageControl.FILE_UPLOAD_STATUS:
+                  data = FileUploadStatus();
+                  break;
+                case PageControl.DOWNLOAD_CENTRE:
+                  data = DownloadCentre();
+                  break;
+                case PageControl.MANAGE_GROUP:
+                  data = FavouriteListView();
+                  break;
+                // case PageControl.MANAGE_CONTACT:
+                //   return ManageContact();
+                case PageControl.CREDIT_HISTORY:
+                  data = CreditHistory();
+                  break;
+                case PageControl.TEMPLATE:
+                  data = MyAccountTemplate();
+                  break;
+                case PageControl.GENERAL:
+                  data = General();
+                  break;
+                case PageControl.PROFILE:
+                  data = Profile();
+                  break;
+                case PageControl.HELP:
+                  data = HelpMe();
+                  break;
+                case PageControl.Error:
+                  data = ErrorPage();
+                  break;
+                default:
+                  data = QuickSendV2();
+              }
+              return WillPopScope(
+                onWillPop: () {
+                  var hdp = Provider.of<HandleDrawerActivity>(
+                    context,
+                    listen: false,
+                  );
+                  if (hdp.pagetitle == PageControl.Dashboard.toString())
+                    Navigator.pop(context);
+                  else
+                    hdp.swtichpage(
+                      PageControl.Dashboard,
+                    );
+                  return;
+                },
+                child: data,
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

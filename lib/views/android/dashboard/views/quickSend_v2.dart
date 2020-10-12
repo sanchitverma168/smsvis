@@ -1,6 +1,6 @@
 import 'package:Smsvis/providers/importContact.dart';
 import 'package:Smsvis/providers/quicksendprovider_v2.dart';
-import 'package:Smsvis/widgets/quicksend/returnContact.dart';
+import 'package:Smsvis/widgets/quicksendv2/returnContact.dart';
 import 'package:Smsvis/widgets/quicksendv2/messagesend.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

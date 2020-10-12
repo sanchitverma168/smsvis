@@ -10,22 +10,7 @@ class DetailReportCardData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final drp = Provider.of<DetailReportProvider>(context, listen: false);
-    List<String> columnname = [
-      "Mobile",
-      "Text",
-      "Submit Date",
-      "Carrier Update",
-      "Status",
-      "Status Description"
-    ];
-    List<String> celldata = [
-      "xxx3025xxx",
-      "Hi there this is a long text message from system generated automatically.therefore it is wrap",
-      "2020-07-16 16:16:56",
-      "2020-07-16 16:17:11",
-      "Delivered",
-      "	Delivered to Handset"
-    ];
+
     return ListView.builder(
         reverse: true,
         itemCount: drp.jsondataistoRepresent.message.length,

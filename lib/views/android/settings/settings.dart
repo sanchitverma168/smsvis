@@ -1,3 +1,4 @@
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 import '../blacklistNumberPage.dart';
 
@@ -8,7 +9,7 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: Text(TextData.settings),
       ),
       body: Column(
         children: <Widget>[
@@ -21,8 +22,8 @@ class Settings extends StatelessWidget {
                   ));
             },
             leading: Icon(Icons.block),
-            title: Text("Blacklist Numbers"),
-            subtitle: Text("Numbers 0"),
+            title: Text(TextData.blacklistedNumbers),
+            subtitle: Text(TextData.numbers + " 0"),
           ),
         ],
       ),

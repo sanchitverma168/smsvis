@@ -1,3 +1,4 @@
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 
@@ -9,10 +10,7 @@ class CantReadContacts extends StatelessWidget {
     return Container(
       child: Center(
         child: GestureDetector(
-          onHorizontalDragDown: (details) {
-            // print("updating Screen");
-            // permission();
-          },
+          onHorizontalDragDown: (details) {},
           child: Container(
             child: Center(
               child: Column(
@@ -20,12 +18,12 @@ class CantReadContacts extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Can't Read Contacts Please Enable Permission from Settings",
+                    TextData.cantReadContactsPleaseEnablePermission,
                     style: TextStyle(color: Colors.red),
                   ),
-                  Text('Pull Down to Refresh'),
+                  Text(TextData.pulldownToRefresh),
                   OutlineButton(
-                    child: Text("App Settings"),
+                    child: Text(TextData.appSettings),
                     onPressed: () {
                       AppSettings.openAppSettings();
                     },

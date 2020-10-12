@@ -1,3 +1,4 @@
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +60,6 @@ class _ReturnContactState extends State<ReturnContact> {
       }
       if (i == maxindex) break;
     }
-    //  print("output done");
   }
 
   updateleadingicon(index) {
@@ -79,24 +79,22 @@ class _ReturnContactState extends State<ReturnContact> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Select Contacts',
-        ),
+        title: Text(TextData.selectContacts),
         actions: <Widget>[],
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           new FloatingActionButton(
-            heroTag: "cancel",
-            child: Text("Cancel"),
+            heroTag: TextData.heroTag.first,
+            child: Text(TextData.cancel),
             onPressed: () {
               Navigator.pop(context, returndata);
             },
           ),
           new FloatingActionButton(
-            heroTag: "add",
-            child: Text("Add"),
+            heroTag: TextData.heroTag.last,
+            child: Text(TextData.add),
             onPressed: () {
               convertnumbertostring();
               returndata = {
@@ -116,9 +114,7 @@ class _ReturnContactState extends State<ReturnContact> {
                   Contact c = _contacts?.elementAt(index);
                   return ListTile(
                     onTap: () {
-                      // print("working");
                       updateleadingicon(index);
-                      // print(activedisabled[index]);
                     },
                     leading: CircleAvatar(child: Text(c.initials())),
                     title: Text(c.displayName ?? ""),

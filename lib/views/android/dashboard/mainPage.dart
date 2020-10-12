@@ -1,4 +1,5 @@
 import 'package:Smsvis/providers/handle_main_drawer_activity.dart';
+import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/utils/stringtext.dart';
 import 'package:Smsvis/widgets/dashboard/gridviewwidget.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,7 @@ class Dashboard extends StatelessWidget {
   final String creditLeft;
   Dashboard(this.creditLeft, {Key key}) : super(key: key);
   gotoPage(context, page) {
-    print("done");
-    var hda = Provider.of<HandleDrawerActivity>(context, listen: false);
-    hda.swtichpage(page);
+    Provider.of<HandleDrawerActivity>(context, listen: false).swtichpage(page);
   }
 
   @override
@@ -19,7 +18,7 @@ class Dashboard extends StatelessWidget {
     Color creditBox;
     var size = MediaQuery.of(context).size;
     if (int.parse(creditLeft) > 60)
-      creditBox = Colors.greenAccent;
+      creditBox = UIColors.successColor;
     else if (int.parse(creditLeft) > 20 && (int.parse(creditLeft) < 60))
       creditBox = Colors.yellow;
     else
@@ -62,14 +61,14 @@ class Dashboard extends StatelessWidget {
                             text: TextData.misReport,
                             heightBox: size.height * .15,
                             widthBox: size.width * 0.25),
-                        GridViewBoxShow(
-                            function: () {
-                              gotoPage(context, PageControl.DETAIL_REPORT);
-                            },
-                            icondata: Icons.receipt,
-                            text: TextData.detailReportPage,
-                            heightBox: size.height * .15,
-                            widthBox: size.width * 0.25),
+                        // GridViewBoxShow(
+                        //     function: () {
+                        //       gotoPage(context, PageControl.DETAIL_REPORT);
+                        //     },
+                        //     icondata: Icons.receipt,
+                        //     text: TextData.detailReportPage,
+                        //     heightBox: size.height * .15,
+                        //     widthBox: size.width * 0.25),
                         GridViewBoxShow(
                             function: () {},
                             textColor: Colors.blue[50],

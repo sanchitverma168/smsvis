@@ -8,10 +8,16 @@ class DisplayContentData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(label),
-          Text(count.toString()),
-        ]);
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Text(label),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            count.toString(),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -34,7 +34,7 @@ class _RegisterState extends State<Register> {
           setState(() {});
         }
       } else {
-        Toast.show("No Internet Connection", context,
+        Toast.show(TextData.noInternetConnection, context,
             gravity: 2,
             duration: 2,
             backgroundColor: Colors.white,
@@ -51,7 +51,7 @@ class _RegisterState extends State<Register> {
           color: Colors.transparent,
           height: MediaQuery.of(context).size.height * 0.15,
           width: MediaQuery.of(context).size.height * 0.55,
-          child: Image.asset("assets/png/app_logo.png"),
+          child: Image.asset(TextData.app_logo),
         ));
   }
 
@@ -69,35 +69,38 @@ class _RegisterState extends State<Register> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-                validator: (value) {
-                  switch (title) {
-                    case TextData.fullname:
-                      _fullname = value.trim();
-                      break;
-                    case TextData.mobile:
-                      _mobile = value.trim();
-                      break;
-                    case TextData.email:
-                      _email = value.trim();
-                      break;
-                    case TextData.location:
-                      _location = value.trim();
-                      break;
-                  }
-                  // email = value.trim();
-                  if (value.isEmpty) return "Enter " + title;
-                  return null;
-                },
-                onSaved: (value) {},
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    fillColor: Color(0xfff3f3f4),
-                    filled: true,
-                    hintText: title))
-          ]),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            validator: (value) {
+              switch (title) {
+                case TextData.fullname:
+                  _fullname = value.trim();
+                  break;
+                case TextData.mobile:
+                  _mobile = value.trim();
+                  break;
+                case TextData.email:
+                  _email = value.trim();
+                  break;
+                case TextData.location:
+                  _location = value.trim();
+                  break;
+              }
+              // email = value.trim();
+              if (value.isEmpty) return TextData.enter + title;
+              return null;
+            },
+            onSaved: (value) {},
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              fillColor: Color(0xfff3f3f4),
+              filled: true,
+              hintText: title,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -115,27 +118,30 @@ class _RegisterState extends State<Register> {
   Widget _successmsg() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
-      child: Text(TextData.registrationSuccess,
-          style: TextStyle(
-            color: Colors.green,
-            fontWeight: FontWeight.bold,
-          )),
+      child: Text(
+        TextData.registrationSuccess,
+        style: TextStyle(
+          color: Colors.green,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 
   Widget _errormsg() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
-      child: Text(TextData.registrationError,
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-          )),
+      child: Text(
+        TextData.registrationError,
+        style: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 
   Widget _submitButton() {
-    // return RaisedButton(onPressed: onRegister, child: Text("Register"));
     return GestureDetector(
       onTap: onRegister,
       child: Card(
@@ -145,21 +151,33 @@ class _RegisterState extends State<Register> {
           padding: EdgeInsets.symmetric(vertical: 15),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2)
+            borderRadius: BorderRadius.all(
+              Radius.circular(5),
+            ),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Color(0xfffbb448),
+                Color(
+                  0xfff7892b,
+                ),
               ],
-              gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+            ),
+          ),
           child: Text(
-            'Register',
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            TextData.register,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -170,41 +188,54 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     var routeHandler = Provider.of<RouteHandler>(context, listen: false);
-    return Scaffold(
-        body: Container(
-      height: size.height,
-      width: size.width,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              top: -size.height * .15,
-              right: -size.width * .5,
-              child: BezierContainer()),
-          Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                    SizedBox(height: size.height * 0.15),
-                    applogo(),
-                    progressonlogin(),
-                    routeHandler.registrationSuccess == true
-                        ? _successmsg()
-                        : _errormsg(),
-                    // msg == null ? SizedBox(height: 30) : SizedBox(height: 10),
-                    // msg == null ? SizedBox(height: 0) : _errorBox,
-                    Form(key: _formRegisterKey, child: _emailPasswordWidget()),
-                    SizedBox(height: 20),
-                    _submitButton()
-                  ]))),
-          Positioned(
+    return WillPopScope(
+      onWillPop: () {
+        routeHandler.messageShow = false;
+        Navigator.pop(context);
+        return;
+      },
+      child: Scaffold(
+          body: Container(
+        height: size.height,
+        width: size.width,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+                top: -size.height * .15,
+                right: -size.width * .5,
+                child: BezierContainer()),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                      SizedBox(height: size.height * 0.15),
+                      applogo(),
+                      progressonlogin(),
+                      if (routeHandler.messageShow)
+                        routeHandler.registrationSuccess == true
+                            ? _successmsg()
+                            : _errormsg(),
+                      Form(
+                        key: _formRegisterKey,
+                        child: _emailPasswordWidget(),
+                      ),
+                      SizedBox(height: 20),
+                      _submitButton()
+                    ]))),
+            Positioned(
               top: size.height * .07,
               left: size.width * .07,
-              child: Card(elevation: 10, child: BackButton())),
-        ],
-      ),
-    ));
+              child: Card(
+                elevation: 10,
+                child: BackButton(),
+              ),
+            ),
+          ],
+        ),
+      )),
+    );
   }
 }

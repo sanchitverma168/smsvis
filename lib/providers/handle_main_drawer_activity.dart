@@ -1,4 +1,5 @@
 import 'package:Smsvis/models/quicksendresponse.dart';
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
@@ -21,24 +22,6 @@ enum PageControl {
   Dashboard
 }
 
-List<String> pagecontrol = [
-  "Quick Send",
-  "Scheduled Sms",
-  "Current Day MIS",
-  "MIS Report",
-  "Detail Report",
-  "File Upload Status",
-  "Download Centre",
-  "Manage Group",
-  "Manage Contact",
-  "Credit History",
-  "Template",
-  "General",
-  "Profile",
-  "Help",
-  "Dashboard"
-];
-
 class HandleDrawerActivity with ChangeNotifier {
   List<Color> _maincolor = [Color(0xfffbb448), Color(0xfff7892b)];
   List<Color> get maincolor => _maincolor;
@@ -48,7 +31,7 @@ class HandleDrawerActivity with ChangeNotifier {
   QuickSendResponse quickSendResponse = QuickSendResponse();
   PageControl _page = PageControl.Dashboard;
 
-  String _pagetitle = pagecontrol.last;
+  String _pagetitle = TextData.pageTitles.last;
   String _errormsg;
   PageControl get page => _page;
   String get pagetitle => _pagetitle;
@@ -61,77 +44,76 @@ class HandleDrawerActivity with ChangeNotifier {
     if (notify) notifyListeners();
   }
 
-  List<String> localsenderid = ["Select Sender ID", "No ID Found"];
   // --------------- start of functions
 
   swtichpage(PageControl page) {
     switch (page) {
       case PageControl.Dashboard:
         _page = PageControl.Dashboard;
-        _pagetitle = pagecontrol.last;
+        _pagetitle = TextData.pageTitles.last;
         break;
       case PageControl.QUICK_SEND:
         _page = PageControl.QUICK_SEND;
-        _pagetitle = pagecontrol.first;
+        _pagetitle = TextData.pageTitles.first;
         break;
       case PageControl.SCHEDULED_SMS:
         _page = PageControl.SCHEDULED_SMS;
-        _pagetitle = pagecontrol[1];
+        _pagetitle = TextData.pageTitles[1];
         break;
       case PageControl.CURRENT_DAY_MIS:
         _page = PageControl.CURRENT_DAY_MIS;
-        _pagetitle = pagecontrol[2];
+        _pagetitle = TextData.pageTitles[2];
         break;
       case PageControl.MIS_REPORT:
         _page = PageControl.MIS_REPORT;
-        _pagetitle = pagecontrol[3];
+        _pagetitle = TextData.pageTitles[3];
         break;
       case PageControl.DETAIL_REPORT:
         _page = PageControl.DETAIL_REPORT;
-        _pagetitle = pagecontrol[4];
+        _pagetitle = TextData.pageTitles[4];
         break;
       case PageControl.FILE_UPLOAD_STATUS:
         _page = PageControl.FILE_UPLOAD_STATUS;
-        _pagetitle = pagecontrol[5];
+        _pagetitle = TextData.pageTitles[5];
         break;
       case PageControl.DOWNLOAD_CENTRE:
         _page = PageControl.DOWNLOAD_CENTRE;
-        _pagetitle = pagecontrol[6];
+        _pagetitle = TextData.pageTitles[6];
         break;
       case PageControl.MANAGE_GROUP:
         _page = PageControl.MANAGE_GROUP;
-        _pagetitle = pagecontrol[7];
+        _pagetitle = TextData.pageTitles[7];
         break;
       case PageControl.MANAGE_CONTACT:
         _page = PageControl.MANAGE_CONTACT;
-        _pagetitle = pagecontrol[8];
+        _pagetitle = TextData.pageTitles[8];
         break;
       case PageControl.CREDIT_HISTORY:
         _page = PageControl.CREDIT_HISTORY;
-        _pagetitle = pagecontrol[9];
+        _pagetitle = TextData.pageTitles[9];
         break;
       case PageControl.TEMPLATE:
         _page = PageControl.TEMPLATE;
-        _pagetitle = pagecontrol[10];
+        _pagetitle = TextData.pageTitles[10];
         break;
       case PageControl.GENERAL:
         _page = PageControl.GENERAL;
-        _pagetitle = pagecontrol[11];
+        _pagetitle = TextData.pageTitles[11];
         break;
       case PageControl.PROFILE:
         _page = PageControl.PROFILE;
-        _pagetitle = pagecontrol[12];
+        _pagetitle = TextData.pageTitles[12];
         break;
       case PageControl.HELP:
         _page = PageControl.HELP;
-        _pagetitle = pagecontrol[13];
+        _pagetitle = TextData.pageTitles[13];
         break;
       case PageControl.Error:
         _page = PageControl.Error;
-        _pagetitle = "No Internet";
+        _pagetitle = TextData.noInternetConnection;
         break;
       default:
-        _pagetitle = pagecontrol.first;
+        _pagetitle = TextData.pageTitles.first;
         _page = PageControl.QUICK_SEND;
         break;
     }

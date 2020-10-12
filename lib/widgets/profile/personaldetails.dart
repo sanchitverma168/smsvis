@@ -1,3 +1,4 @@
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 import 'rowContent.dart';
 
@@ -15,8 +16,6 @@ class PersonalDetails extends StatelessWidget {
         lastDate: DateTime(2260));
     if (dt != null && dt != selectedDate) {
       selectedDate = dt;
-      // print("$dt");
-      // print("$selectedDate");
     }
   }
 
@@ -28,7 +27,7 @@ class PersonalDetails extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: Column(children: <Widget>[
         SizedBox(height: 10),
-        Text("Personal Details"),
+        Text(TextData.personalDetails),
         Divider(),
         RowContent([Text("Title"), TextField()], [1, 2]),
         RowContent([Text("First Name"), TextField()], [1, 2]),

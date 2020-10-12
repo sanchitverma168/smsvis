@@ -18,27 +18,6 @@ class _HelpMeState extends State<HelpMe> {
 
   void response(query) async {
     _textController.clear();
-    // print(query);
-    // AuthGoogle authGoogle =
-    //     await AuthGoogle(fileJson: "assets/credentialsDialogFlow.json").build();
-    // Dialogflow dialogflow =
-    //     Dialogflow(authGoogle: authGoogle, language: Language.english);
-    // print(dialogflow);
-    // // AIResponse r = await dialogflow.detectIntent(query);
-    // AIResponse response = await dialogflow.detectIntent(query);
-    // print(response);
-    // print("hello122");
-    // print(response.queryResult);
-    // print("hello");
-    // ChatMessage message = new ChatMessage(
-    //   text: response.getMessage() ??
-    //       new CardDialogflow(response.getListMessage()[0]).title,
-    //   name: "Bot",
-    //   type: false,
-    // );
-    // setState(() {
-    //   _messages.insert(0, message);
-    // });
   }
 
   void _handleSubmitted(String text) {
@@ -49,7 +28,6 @@ class _HelpMeState extends State<HelpMe> {
       type: true,
     );
     int len = _messages.length;
-    // print(len);
     setState(() {
       _messages.insert(len, message);
     });
@@ -67,15 +45,17 @@ class _HelpMeState extends State<HelpMe> {
               child: new TextField(
                 controller: _textController,
                 onSubmitted: _handleSubmitted,
-                decoration:
-                    new InputDecoration.collapsed(hintText: "Send a message"),
+                decoration: new InputDecoration.collapsed(
+                  hintText: "Send a message",
+                ),
               ),
             ),
             new Container(
               margin: new EdgeInsets.symmetric(horizontal: 4.0),
               child: new IconButton(
-                  icon: new Icon(Icons.send),
-                  onPressed: () => _handleSubmitted(_textController.text)),
+                icon: new Icon(Icons.send),
+                onPressed: () => _handleSubmitted(_textController.text),
+              ),
             ),
           ],
         ),
@@ -86,24 +66,23 @@ class _HelpMeState extends State<HelpMe> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   title: Text("Ask Me Anything"),
-        // ),
-        body: new Column(
-      children: <Widget>[
-        new Flexible(
+      body: new Column(
+        children: <Widget>[
+          new Flexible(
             child: ListView.builder(
-          itemBuilder: (_, int index) => _messages[index],
-          itemCount: _messages.length,
-        )),
-        new Divider(
-          height: 1.0,
-        ),
-        new Container(
-          decoration: new BoxDecoration(color: Theme.of(context).cardColor),
-          child: _buildTextComposer(),
-        ),
-      ],
-    ));
+              itemBuilder: (_, int index) => _messages[index],
+              itemCount: _messages.length,
+            ),
+          ),
+          new Divider(
+            height: 1.0,
+          ),
+          new Container(
+            decoration: new BoxDecoration(color: Theme.of(context).cardColor),
+            child: _buildTextComposer(),
+          ),
+        ],
+      ),
+    );
   }
 }

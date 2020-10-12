@@ -12,7 +12,6 @@ class ErrorText extends StatelessWidget {
       elevation: 8,
       child: Container(
         color: qsp.errorColor,
-        // height: MediaQuery.of(context).size.height * 0.05,
         width: MediaQuery.of(context).size.width,
         child: ListTile(
           title: Center(
@@ -22,13 +21,14 @@ class ErrorText extends StatelessWidget {
             ),
           ),
           trailing: IconButton(
-              icon: Icon(
-                Icons.close,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                qsp.error = false;
-              }),
+            icon: Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              qsp.error = false;
+            },
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:Smsvis/database/db.dart';
 import 'package:Smsvis/database/entities/contact.dart';
 import 'package:Smsvis/database/entities/favourtielist.dart';
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:Smsvis/utils/variables.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _SaveContactsState extends State<SaveContacts> {
       await contactdao.insertcontacts(contact);
     }
     Navigator.pop(context);
-    Toast.show("Save Successfully", context);
+    Toast.show(TextData.saveSuccessfuly, context);
   }
 
   showalerttonamefile() {
@@ -45,7 +46,7 @@ class _SaveContactsState extends State<SaveContacts> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Name this List'),
+          title: Text(TextData.nameThisList),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -55,7 +56,7 @@ class _SaveContactsState extends State<SaveContacts> {
                     initialValue: "7c9519bd83",
                     validator: (value) {
                       if (value.isEmpty) {
-                        return "Please Enter name";
+                        return TextData.pleaseEnterName;
                       }
                       name = value;
                       return null;
@@ -68,7 +69,7 @@ class _SaveContactsState extends State<SaveContacts> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Save'),
+              child: Text(TextData.save),
               onPressed: () {
                 final _passwordform = _savelist.currentState;
                 if (_passwordform.validate()) {
@@ -80,7 +81,7 @@ class _SaveContactsState extends State<SaveContacts> {
             RaisedButton(
               color: Colors.red,
               child: Text(
-                'Cancel',
+                TextData.cancel,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -97,7 +98,6 @@ class _SaveContactsState extends State<SaveContacts> {
 
   @override
   Widget build(BuildContext context) {
-    // print("working");
     return Scaffold(
       body: WillPopScope(
         onWillPop: () {
@@ -114,21 +114,20 @@ class _SaveContactsState extends State<SaveContacts> {
                     itemBuilder: (context, index) {
                       return Card(
                         child: GestureDetector(
-                          onTap: () {
-                            // print(index);
-                          },
+                          onTap: () {},
                           child: ListTile(
-                            title: Text(
-                                "${widget.selectedContact[index].givenName}"),
-                            subtitle: Text(
-                                "${widget.selectedContact[index].phones.toList()[0].value}"),
+                            title:
+                                Text(widget.selectedContact[index].givenName),
+                            subtitle: Text(widget.selectedContact[index].phones
+                                .toList()[0]
+                                .value),
                           ),
                         ),
                       );
                     },
                   )
                 : Center(
-                    child: Text("No Contact Added "),
+                    child: Text(TextData.noContactAdded),
                   )),
       ),
       floatingActionButton: FloatingActionButton(

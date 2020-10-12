@@ -1,7 +1,9 @@
 import 'package:Smsvis/models/api.dart';
 import 'package:Smsvis/models/fetchallsendeerid.dart';
 import 'package:Smsvis/providers/quicksendprovider_v2.dart';
+import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:Smsvis/utils/variables.dart';
 import 'package:flutter/material.dart';
 
@@ -30,64 +32,29 @@ class _FetchingIDAandShowAlertBoxState
   }
 
   updateScreen() {
-    // print("1");
     if (!contentReady) {
-      // print("1A");
       body = Container(
-          child: Center(
-              child: Column(children: [
-        CircularProgressIndicator(),
-        SizedBox(height: 20),
-        Text("Fetching Id......")
-      ])));
-    } else if (contentReady == false && error == true) {
-      // print("2");
-      body = Container(
-          child: Center(
-              child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text("Can't Fetch SenerID"),
-          FlatButton(
-            child: Text("Ok"),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ],
-      )));
-    } else {
-      // print("3");
-      print(_selectedIndex);
-      body = new Container(
-        child: new SingleChildScrollView(
-          child: new Column(
+        child: Center(
+          child: Column(
             children: [
-              new Column(
-                  children: new List<RadioListTile<int>>.generate(
-                      senderid.length, (int index) {
-                return new RadioListTile<int>(
-                  value: index,
-                  groupValue: _selectedIndex,
-                  title: new Text(senderid[index].senderid),
-                  onChanged: (int value) {
-                    print("hello");
-                    _selectedIndex = value;
-                    print(_selectedIndex);
-                    updateScreen();
-                  },
-                );
-              })),
-              OutlineButton(
-                color: Colors.deepOrange,
-                splashColor: Colors.deepOrange,
-                child: Text("Send"),
+              CircularProgressIndicator(),
+              SizedBox(height: 20),
+              Text(TextData.fetchingid),
+            ],
+          ),
+        ),
+      );
+    } else if (contentReady == false && error == true) {
+      body = Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(TextData.cantfetchid),
+              FlatButton(
+                child: Text(TextData.ok),
                 onPressed: () {
-                  // var qspv2 =
-                  //     Provider.of<QuickSendProviderV2>(context, listen: false);
-                  widget.user.senderid = senderid[_selectedIndex].senderid;
-                  widget.user.sendMessage();
                   Navigator.pop(context);
                 },
               ),
@@ -95,6 +62,67 @@ class _FetchingIDAandShowAlertBoxState
           ),
         ),
       );
+    } else {
+      body = new Container(
+          child: new SingleChildScrollView(
+              child: new Column(children: [
+        Center(
+          child: Card(
+            color: UIColors.scolor,
+            child: Container(
+              margin: EdgeInsets.all(8.0),
+              child: Text(
+                TextData.selectSenderID,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+        new Column(
+          children: new List<RadioListTile<int>>.generate(
+            senderid.length,
+            (int index) {
+              return new RadioListTile<int>(
+                value: index,
+                groupValue: _selectedIndex,
+                title: new Text(senderid[index].senderid),
+                onChanged: (int value) {
+                  _selectedIndex = value;
+                  print(_selectedIndex);
+                  updateScreen();
+                },
+              );
+            },
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            OutlineButton(
+                color: Colors.deepOrange,
+                splashColor: Colors.deepOrange,
+                child: Text(
+                  TextData.send,
+                  style: TextStyle(color: UIColors.alertColor),
+                ),
+                onPressed: () {
+                  widget.user.senderid = senderid[_selectedIndex].senderid;
+                  widget.user.sendMessage();
+                  Navigator.pop(context);
+                }),
+            RaisedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                TextData.cancel,
+                style: TextStyle(color: Colors.white),
+              ),
+              color: UIColors.alertColor,
+            )
+          ],
+        )
+      ])));
     }
     setState(() {});
   }
@@ -126,9 +154,6 @@ class _FetchingIDAandShowAlertBoxState
       h = size.height * 0.7;
       w = size.width * 0.5;
     }
-    // return Consumer<QuickSendProviderV2>(builder: (context, user, child) {
-    //   return Container(height: h, width: w, child: body);
-    // });
     return Container(height: h, width: w, child: body);
   }
 }

@@ -15,8 +15,11 @@ class Validation {
   }
 
   static bool isNumberorComma(value) {
-    if (RegExp("[^0-9,]", multiLine: true, caseSensitive: false)
-        .hasMatch(value)) return false;
+    if (RegExp(
+      TextData.isNumberorComma,
+      multiLine: true,
+      caseSensitive: false,
+    ).hasMatch(value)) return false;
     return true;
   }
 

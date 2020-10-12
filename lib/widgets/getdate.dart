@@ -1,3 +1,4 @@
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 
 class GetDate extends StatelessWidget {
@@ -7,29 +8,40 @@ class GetDate extends StatelessWidget {
     DateTime from = DateTime.now();
     DateTime to = DateTime.now();
     return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text("Start Date:"),
-                  Text("${from.toLocal()}".split(" ").first),
-                  FlatButton(onPressed: null, child: Text("Select  Date")),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text("End Date:"),
-                  Text("${to.toLocal()}".split(" ").first),
-                  FlatButton(onPressed: null, child: Text("Select  Date")),
-                ],
-              ),
-            ],
-          ),
-        ));
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(TextData.startDate),
+                Text(from.toLocal().toString().split(" ").first),
+                FlatButton(
+                  onPressed: null,
+                  child: Text(
+                    TextData.selectDate,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(TextData.endDate),
+                Text(to.toLocal().toString().split(" ").first),
+                FlatButton(
+                  onPressed: null,
+                  child: Text(
+                    TextData.selectDate,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

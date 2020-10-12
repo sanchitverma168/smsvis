@@ -12,14 +12,6 @@ class SearchContacts extends StatelessWidget {
     var contacts = importContacts.showContacts;
     var indexS = importContacts.searchContactsIndex;
     var selectecContact = importContacts.selectedContactsindex;
-    // print("SearchContacts");
-    // var s = " ";
-    // for (int i = 0; i < indexS.length; i++) s += indexS[i].toString() + " ";
-    // print(s);
-    // print("${indexS.length} index");
-    // print("${selectecContact.length} selected");
-    // print("${contacts.length} contacts");
-
     return ListView.builder(
       itemCount: contacts?.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
@@ -27,15 +19,23 @@ class SearchContacts extends StatelessWidget {
           elevation: 4,
           child: ListTile(
             onTap: () {
-              importContacts.updateindex(indexS[index]);
+              importContacts.updateindex(
+                indexS[index],
+              );
             },
             leading: CircleAvatar(
-                child: Text(contacts[index].displayName.substring(0, 1))),
+              child: Text(
+                contacts[index].displayName.substring(0, 1),
+              ),
+            ),
             title: Text(contacts[index].displayName),
             trailing: selectecContact[indexS[index]] == 0
-                ? SizedBox(child: Icon(Icons.check_circle_outline))
+                ? SizedBox(
+                    child: Icon(Icons.check_circle_outline),
+                  )
                 : SizedBox(
-                    child: Icon(Icons.check_circle, color: Colors.green)),
+                    child: Icon(Icons.check_circle, color: Colors.green),
+                  ),
           ),
         );
       },

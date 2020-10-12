@@ -1,14 +1,10 @@
 import 'dart:convert';
-
 import 'package:Smsvis/models/api.dart';
 import 'package:Smsvis/models/detail_mis_report.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/utils/variables.dart';
-import 'package:Smsvis/widgets/detailreport/carddata.dart';
 import 'package:Smsvis/widgets/detailreport/datatable.dart';
 import 'package:Smsvis/widgets/detailreport/hintTextFirstPage.dart';
-import 'package:Smsvis/widgets/detailreport/loading.dart';
-import 'package:Smsvis/widgets/detailreport/nodatafound.dart';
 import 'package:Smsvis/widgets/misreport/carddata.dart';
 import 'package:Smsvis/widgets/misreport/loading.dart';
 import 'package:Smsvis/widgets/misreport/nodatafound.dart';
@@ -44,20 +40,20 @@ class MISReportProvider with ChangeNotifier {
     String username = await SharedData().username;
     screenContent = ScreenContent.IsLoading;
     setScreenContent();
-    var data = await API().fetchdata(username, TypeData.DetailMISReport,
-        startdate: startdate, enddate: enddate);
-    // l.i(data);
-    var jsondata = json.decode(data);
-    if (jsondata["status"] == 401.toString()) {
-      print("inside 401");
+    var data;
+    try {
+      data = await API().fetchdata(username, TypeData.DetailMISReport,
+          startdate: startdate, enddate: enddate);
+    } catch (e) {
+      print(e);
+    }
+    if (json.decode(data)["status"] == 401.toString()) {
       screenContent = ScreenContent.NoDataFound;
     } else {
       jsondataistoRepresent = misDetailReportFromJson(data);
       dataReady = true;
-      print("inside else");
       screenContent = ScreenContent.DataReady;
     }
-
     setScreenContent();
   }
 

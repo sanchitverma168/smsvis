@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Smsvis/models/api.dart';
 import 'package:Smsvis/models/quicksendresponse.dart';
+import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/utils/stringtext.dart';
 import 'package:Smsvis/utils/validation.dart';
@@ -107,7 +108,7 @@ class QuickSendProviderV2 with ChangeNotifier {
   /// Displays The Error on The Screen with arugments given.
   seterror(
     bool value, {
-    Color color = Colors.redAccent,
+    Color color = UIColors.alertColor,
     @required String errorText,
     bool notify = true,
   }) {
@@ -188,6 +189,15 @@ class QuickSendProviderV2 with ChangeNotifier {
   /// Updates the _inputMobilString.
   set wrongMobileNumber(value) => _wrongMobileNumber = value;
 
+  AnimationController helpanimationController;
+
+  /// Decided whether to show [View Contact];
+  bool viewContactonQuickSendPage = false;
+  bool get getViewContactonQuickSendPage => viewContactonQuickSendPage;
+
+  set setViewContactonQuickSendPage(bool viewContactonQuickSendPage) =>
+      this.viewContactonQuickSendPage = viewContactonQuickSendPage;
+
   ////////////////////////////////// Methods Start////////////////////////////////-------------///////////////////////////////////////////////////////////////////////////////////////////////////
   charleftReset({bool notify = true}) {
     charleft = 0;
@@ -206,32 +216,33 @@ class QuickSendProviderV2 with ChangeNotifier {
     if (isLenghtNotZero(filenumbersLength) &&
         isLenghtNotZero(phonenumbersLength) &&
         (inputMobileData == null || inputMobileData.isEmpty))
-      return seterror(true, errorText: "No Number Added");
-
-    if (validateusernumberentered(
-        inputMobileData.toString())) if (validateMessageBox())
-      return getid(context, user);
+      return seterror(true, errorText: TextData.noNumberAdded);
+    if (validateMessageBox()) return getid(context, user);
   }
 
   _showDialog(context, QuickSendProviderV2 user) {
     showDialog(
-        context: context,
-        // barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Dialog(child: new FetchingIDAandShowAlertBox(user));
-        });
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: new FetchingIDAandShowAlertBox(user),
+        );
+      },
+    );
   }
 
   getid(context, QuickSendProviderV2 user) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showDialog(context, user);
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        _showDialog(context, user);
+      },
+    );
   }
 
   /// Recieve Number in String Format,UserName and password as
   /// argument.
   sendMessage() async {
-    print("inside sendMessge Function");
     String numberString, username, password;
     username = await SharedData().username;
     password = await SharedData().password;
@@ -248,7 +259,6 @@ class QuickSendProviderV2 with ChangeNotifier {
         if (i != numbers.length - 1) numberString += "+";
       }
     }
-    print(numberString + "A Time");
 
     if (filenumbersLength != 0) {
       if (numberString != null) numberString += "+";
@@ -263,17 +273,13 @@ class QuickSendProviderV2 with ChangeNotifier {
         var d = convertListtoString(phonenumbers);
         numberString += d;
       }
-      print(numberString + "D Time");
     }
-    print(numberString + "E Time");
     if (senderid == null ||
         usermessage == null ||
         password == null ||
         numberString == null ||
         username == null)
-      return seterror(true, errorText: "Something Went Wrong");
-    // print(numberString);
-    // return;
+      return seterror(true, errorText: TextData.somethingWentWrong);
     var rsp = await API()
         .postmesage(senderid, usermessage, password, numberString, username);
     var jsondata = json.decode(rsp);
@@ -299,20 +305,18 @@ class QuickSendProviderV2 with ChangeNotifier {
   }
 
   importCSVFILE(BuildContext context) async {
-    // print("${_selectedContact.length} + csv");
     File file = await FilePicker.getFile(allowCompression: false);
     if (file != null) {
       String name = file.path.split('/').last;
       String ext = file.path.split('.').last;
-      // print(name + ext);
       for (int i = 0; i < _filename.length; i++) {
         if (_filename[i] == name) {
-          Toast.show("File Already Imported", context);
+          Toast.show(TextData.fileAlreadyImported, context);
           return;
         }
       }
-      if (ext != "csv") {
-        Toast.show("File Not Supported", context);
+      if (ext != TextData.csv) {
+        Toast.show(TextData.fileNotSupported, context);
         return;
       }
       Stream<List> inputStream = file.openRead();
@@ -322,9 +326,10 @@ class QuickSendProviderV2 with ChangeNotifier {
           .listen((String line) {
         // Process results.
         List row = line.split(' '); // split by comma
-
         String number = row[0];
-        _fileNumbers.add(removeextraCharFromNumber(number));
+        _fileNumbers.add(
+          removeextraCharFromNumber(number),
+        );
       }, onDone: () {
         _filename.add(name);
       }, onError: (e) {});
@@ -361,7 +366,7 @@ class QuickSendProviderV2 with ChangeNotifier {
   validateMessageBox() {
     final form = _quicksend.currentState;
     if (!form.validate()) {
-      seterror(true, errorText: "Please Type Message");
+      seterror(true, errorText: TextData.pleaseTypeMessage);
       return false;
     }
     print(true);
@@ -422,17 +427,15 @@ class QuickSendProviderV2 with ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (!RegExp("[^\s\S\w():,.<>?\/\'a-zA-Z0-9{}:;\"')(-_=+*&^%\$#@!~]",
+    if (!RegExp(TextData.regExpOnMessageSendPage,
             multiLine: true, caseSensitive: false)
         .hasMatch(value.split(" ").join(""))) {
-      // print(" English");
       msgCount = (l ~/ maxEnglishChars).toInt();
       charleft = maxEnglishChars - (l - (msgCount * maxEnglishChars));
       msgCount++;
       notifyListeners();
       return;
     } else {
-      // print("Non English");
       msgCount = (l ~/ maxNonEnglishChars).toInt();
       charleft = maxNonEnglishChars - (l - (msgCount * maxNonEnglishChars));
       msgCount++;
@@ -447,9 +450,9 @@ class QuickSendProviderV2 with ChangeNotifier {
     }
     if (!isNumberLengthCorrect(value)) {
       if (wrongMobileNumber == "")
-        seterror(true, errorText: "Remove , from Last");
+        seterror(true, errorText: TextData.removecommafromLast);
       else
-        seterror(true, errorText: "Wrong Number is $wrongMobileNumber ");
+        seterror(true, errorText: TextData.wrongnumberis + wrongMobileNumber);
       return false;
     }
     return true;
@@ -459,23 +462,22 @@ class QuickSendProviderV2 with ChangeNotifier {
     wrongMobileNumber = null;
     bool r = true;
     List<String> numbers = value.split(",");
-    numbers.forEach((element) {
-      print(element);
-      // print((Validation.isEqualtoValue(element, 0)).toString() + "$element");
-      print(Validation.isSpace(element).toString() + "$element");
-      print(Validation.isNull(element).toString() + "$element");
-      // print(Validation.isEqualtoValue(element, 10).toString() + "$element");
-      print("-----");
-      if (Validation.isSpace(element) ||
-          Validation.isNull(element) ||
-          Validation.isEqualtoValue(element, 0) ||
-          !Validation.isEqualtoValue(element, 10)) {
-        wrongMobileNumber = element;
-        r = false;
-      } else
-        r = true;
-    });
-    print(r);
+    numbers.forEach(
+      (element) {
+        if (Validation.isSpace(element) ||
+            Validation.isNull(element) ||
+            Validation.isEqualtoValue(element, 0) ||
+            !Validation.isEqualtoValue(element, 10)) {
+          wrongMobileNumber = element;
+          r = false;
+        } else
+          r = true;
+      },
+    );
     return r;
+  }
+
+  updateScreen() {
+    notifyListeners();
   }
 }

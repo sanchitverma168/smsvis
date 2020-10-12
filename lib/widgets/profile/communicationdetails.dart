@@ -1,19 +1,9 @@
+import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 import 'rowContent.dart';
 
 class CommunicationDetails extends StatelessWidget {
   CommunicationDetails({Key key}) : super(key: key);
-  final List<String> _data = [
-    "Address",
-    "City",
-    "PinCode",
-    "State",
-    "Country",
-    "E-mail",
-    "Mobile Number"
-  ];
-  final String type = "Type";
-  final String dot = "....";
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,67 +12,82 @@ class CommunicationDetails extends StatelessWidget {
         children: <Widget>[
           SizedBox(height: 20),
           Divider(),
-          Text("Communication Details"),
+          Text(TextData.communicationDetails),
           RowContent([
-            Text(_data[0]),
+            Text(TextData.communicationDetailsArray[0]),
             TextField(
               maxLines: 3,
-              decoration: InputDecoration(hintText: "$type ${_data[0]}$dot"),
+              decoration: InputDecoration(
+                  hintText: TextData.type +
+                      TextData.communicationDetailsArray[0] +
+                      TextData.dot),
             )
           ], [
             1,
             2
           ]),
           RowContent([
-            Text(_data[1]),
+            Text(TextData.communicationDetailsArray[1]),
             TextField(
-              decoration: InputDecoration(hintText: "$type ${_data[1]}$dot"),
-            )
+                decoration: InputDecoration(
+                    hintText: TextData.type +
+                        TextData.communicationDetailsArray[1] +
+                        TextData.dot))
           ], [
             1,
             2
           ]),
           RowContent([
-            Text(_data[2]),
+            Text(TextData.communicationDetailsArray[2]),
             TextField(
-              decoration: InputDecoration(hintText: "$type ${_data[2]}$dot"),
-            )
+                decoration: InputDecoration(
+                    hintText: TextData.type +
+                        TextData.communicationDetailsArray[2] +
+                        TextData.dot))
           ], [
             1,
             2
           ]),
           RowContent([
-            Text(_data[3]),
+            Text(TextData.communicationDetailsArray[3]),
             TextField(
-              decoration: InputDecoration(hintText: "$type ${_data[3]}$dot"),
-            )
+                decoration: InputDecoration(
+                    hintText: TextData.type +
+                        TextData.communicationDetailsArray[3] +
+                        TextData.dot))
           ], [
             1,
             2
           ]),
           RowContent([
-            Text(_data[4]),
+            Text(TextData.communicationDetailsArray[4]),
             TextField(
-              decoration: InputDecoration(hintText: "$type ${_data[4]}$dot"),
-            )
+                decoration: InputDecoration(
+                    hintText: TextData.type +
+                        TextData.communicationDetailsArray[4] +
+                        TextData.dot))
           ], [
             1,
             2
           ]),
           RowContent([
-            Text(_data[5]),
+            Text(TextData.communicationDetailsArray[5]),
             TextField(
-              decoration: InputDecoration(hintText: "$type ${_data[5]}$dot"),
-            )
+                decoration: InputDecoration(
+                    hintText: TextData.type +
+                        TextData.communicationDetailsArray[5] +
+                        TextData.dot))
           ], [
             1,
             2
           ]),
           RowContent([
-            Text(_data[6]),
+            Text(TextData.communicationDetailsArray[6]),
             TextField(
-              decoration: InputDecoration(hintText: "$type ${_data[6]}$dot"),
-            )
+                decoration: InputDecoration(
+                    hintText: TextData.type +
+                        TextData.communicationDetailsArray[6] +
+                        TextData.dot))
           ], [
             1,
             2

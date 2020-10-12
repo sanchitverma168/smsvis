@@ -7,7 +7,6 @@ import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/utils/stringtext.dart';
 import 'package:Smsvis/utils/variables.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class CurrentDayMISReporttoDisplayReport extends StatefulWidget {
