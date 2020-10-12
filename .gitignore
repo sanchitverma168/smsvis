@@ -8,6 +8,11 @@
 .buildlog/
 .history
 .svn/
+.dart_tool/
+android/.gradle
+android/.idea
+android/key.properties
+android/app/google-services.json
 
 # IntelliJ related
 *.iml
