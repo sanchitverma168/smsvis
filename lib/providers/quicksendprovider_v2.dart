@@ -95,6 +95,7 @@ class QuickSendProviderV2 with ChangeNotifier {
 
   /// Return the Error color.
   Color get errorColor => _errorcolor;
+  set errorColor(value) => _errorcolor = value;
 
   /// Error Text Variable
   String _errortext;
@@ -198,6 +199,9 @@ class QuickSendProviderV2 with ChangeNotifier {
   set setViewContactonQuickSendPage(bool viewContactonQuickSendPage) =>
       this.viewContactonQuickSendPage = viewContactonQuickSendPage;
 
+  bool _messageSentSuccessfully = false;
+  bool get messageSentSuccessfully => _messageSentSuccessfully;
+  set messageSentSuccessfully(value) => _messageSentSuccessfully = value;
   ////////////////////////////////// Methods Start////////////////////////////////-------------///////////////////////////////////////////////////////////////////////////////////////////////////
   charleftReset({bool notify = true}) {
     charleft = 0;
@@ -293,8 +297,9 @@ class QuickSendProviderV2 with ChangeNotifier {
             color: Colors.green,
             errorText: msgrsp.statusMessage,
             notify: false);
-
+        messageSentSuccessfully = true;
         resetform(errorT: true);
+
         break;
       case 406:
         seterror(true, errorText: msgrsp.statusMessage);

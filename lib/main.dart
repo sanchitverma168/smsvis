@@ -30,19 +30,21 @@ void main() {
 class Router extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<RouteHandler>(builder: (context, user, child) {
-      switch (user.status) {
-        case Status.Uninitialized:
-          return AndroidLoading();
-        case Status.Unauthenticated:
-          return LoginPage(title: TextData.loginPage);
-        case Status.Authenticated:
-          return AndroidDashboard();
-        case Status.NOINTERNETCONNECTION:
-          return ErrorPage();
-        default:
-          return LoginPage(title: TextData.loginPage);
-      }
-    });
+    return Scaffold(
+      body: Consumer<RouteHandler>(builder: (context, user, child) {
+        switch (user.status) {
+          case Status.Uninitialized:
+            return AndroidLoading();
+          case Status.Unauthenticated:
+            return LoginPage(title: TextData.loginPage);
+          case Status.Authenticated:
+            return AndroidDashboard();
+          case Status.NOINTERNETCONNECTION:
+            return ErrorPage();
+          default:
+            return LoginPage(title: TextData.loginPage);
+        }
+      }),
+    );
   }
 }

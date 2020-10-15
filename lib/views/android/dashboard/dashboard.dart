@@ -1,13 +1,12 @@
-import 'package:Smsvis/models/api.dart';
+import 'dart:async';
 import 'package:Smsvis/providers/currentdaymis.dart';
 import 'package:Smsvis/providers/detailreport.dart';
 import 'package:Smsvis/providers/misreport.dart';
 import 'package:Smsvis/providers/quicksendprovider_v2.dart';
+import 'package:Smsvis/providers/routehandler.dart';
 import 'package:Smsvis/utils/stringtext.dart';
-import 'package:Smsvis/utils/enum.dart';
 import 'package:Smsvis/models/fetchallsendeerid.dart';
 import 'package:Smsvis/providers/handle_main_drawer_activity.dart';
-import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/views/android/contacts/viewfavouritelist.dart';
 import 'package:Smsvis/views/android/dashboard/help.dart';
 import 'package:Smsvis/views/android/dashboard/mainPage.dart';
@@ -24,7 +23,7 @@ import 'package:Smsvis/views/android/dashboard/views/profile.dart';
 import 'package:Smsvis/views/android/dashboard/views/quickSend_v2.dart';
 import 'package:Smsvis/views/android/dashboard/views/scheduled_sms.dart';
 import 'package:Smsvis/views/android/error.dart';
-import 'package:Smsvis/views/android/loading.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,37 +35,28 @@ class AndroidDashboard extends StatefulWidget {
 }
 
 class _AndroidDashboardState extends State<AndroidDashboard> {
-  String u;
-  Credits credits;
   List<SenderId> senderid;
+  StreamSubscription<ConnectivityResult> subscription;
 
   @override
   void initState() {
-    getusername();
+    subscription = Connectivity().onConnectivityChanged.listen((result) {
+      Provider.of<RouteHandler>(context, listen: false)
+          .updateConnectivityResult(result);
+    });
     super.initState();
   }
 
-  fetchuserdata(u) async {
-    var creditsjson;
-    try {
-      creditsjson = await API().fetchdata(u, TypeData.Credits);
-      credits = creditsFromMap(creditsjson);
-    } catch (e) {
-      print(e + "On Credits Fetch Api --AndroidDashboardPage");
-      creditsjson = {"credit_left": "0"};
-      credits = creditsFromMap(creditsjson);
-    }
-    print(creditsjson);
-    setState(() {});
-  }
-
-  getusername() async {
-    u = await SharedData().username;
-    fetchuserdata(u);
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    var rh =
+        Provider.of<RouteHandler>(context, listen: false).connecitivityResult;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -78,9 +68,11 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
           appBar: AppBar(
             title: Consumer<HandleDrawerActivity>(
               builder: (context, user, child) {
-                return Text(
-                  user.pagetitle,
-                );
+                if (user.credit == null ||
+                    user.username == null && !user.creditRequestSent) {
+                  user.getUsername();
+                }
+                return Text(user.pagetitle);
               },
             ),
             actions: [
@@ -112,26 +104,35 @@ class _AndroidDashboardState extends State<AndroidDashboard> {
             ],
             flexibleSpace: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: HandleDrawerActivity().maincolor,
-                ),
+                gradient: rh == ConnectivityResult.none
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.blueGrey, Colors.grey],
+                      )
+                    : LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: HandleDrawerActivity().maincolor,
+                      ),
               ),
             ),
           ),
           drawer: Consumer<HandleDrawerActivity>(
             builder: (context, user, child) {
-              return SideDrawer(u, credits.creditLeft);
+              return SideDrawer();
+              // return Text("GHello");
             },
           ),
           body: Consumer<HandleDrawerActivity>(
             builder: (context, user, child) {
               Widget data;
+
+              if (user.credit == null)
+                return Center(child: CircularProgressIndicator());
               switch (user.page) {
                 case PageControl.Dashboard:
-                  if (credits == null) return AndroidLoading();
-                  return Dashboard(credits.creditLeft);
+                  return Dashboard();
                 case PageControl.QUICK_SEND:
                   data = ChangeNotifierProvider(
                     create: (context) => QuickSendProviderV2(),

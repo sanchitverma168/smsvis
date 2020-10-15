@@ -4,6 +4,7 @@ import 'package:Smsvis/models/quicksendresponse.dart';
 import 'package:Smsvis/utils/internetconnection.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/utils/stringtext.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 
@@ -63,6 +64,11 @@ class RouteHandler with ChangeNotifier {
 
   set setMessageLoginScreen(String messageLoginScreen) =>
       this.messageLoginScreen = messageLoginScreen;
+
+  /// For connection Update
+  ConnectivityResult _connecitivityResult;
+  ConnectivityResult get connecitivityResult => _connecitivityResult;
+  set connecitivityResult(value) => _connecitivityResult = value;
 
   initAuthProvider() async {
     if (await InternetConnection().isConnected()) {
@@ -138,5 +144,13 @@ class RouteHandler with ChangeNotifier {
       return false;
     } else
       return true;
+  }
+
+  updateConnectivityResult(result) {
+    _connecitivityResult = result;
+    // if (result != ConnectivityResult.none) _status = Status.Authenticated;
+    // // else
+    //   _status = Status.Authenticated;
+    notifyListeners();
   }
 }

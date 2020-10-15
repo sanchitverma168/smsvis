@@ -16,10 +16,29 @@ class ErrorPage extends StatefulWidget {
 
 class _ErrorPageState extends State<ErrorPage> {
   bool showProgress = false;
+  Timer t;
   Widget progress() {
     return Container(
       child: CircularProgressIndicator(backgroundColor: UIColors.scolor),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    t.cancel();
+    super.dispose();
+  }
+
+  updatepage() {
+    t = Timer(Duration(seconds: 10), () {
+      showProgress = false;
+      setState(() {});
+    });
   }
 
   Widget errorshow() {
@@ -38,10 +57,7 @@ class _ErrorPageState extends State<ErrorPage> {
                   Provider.of<RouteHandler>(context, listen: false)
                       .initAuthProvider();
                   setState(() {});
-                  Timer(Duration(seconds: 10), () {
-                    showProgress = false;
-                    setState(() {});
-                  });
+                  updatepage();
                 },
                 child: Text(TextData.retry))
           ]),

@@ -176,6 +176,7 @@ class TextData {
   static const String dot = "....";
   static const String personalDetails = "Personal Details";
   static const String fetchingid = "Fetching ID .....";
+  static const String fetching = "Fetching ";
   static const String cantfetchid = "Can't Fetch SenderId";
   static const String ok = "OK";
   static const String sure = "Sure";

@@ -1,16 +1,17 @@
+import 'package:Smsvis/providers/handle_main_drawer_activity.dart';
 import 'package:Smsvis/providers/quicksendprovider_v2.dart';
-import 'package:Smsvis/utils/animation.dart';
+import 'package:Smsvis/providers/routehandler.dart';
 import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/utils/stringtext.dart';
-import 'package:Smsvis/views/android/login.dart';
 import 'package:Smsvis/widgets/quicksendv2/displayContentdata.dart';
 import 'package:Smsvis/widgets/quicksendv2/error.dart';
 import 'package:Smsvis/widgets/quicksendv2/importContacts.dart';
 import 'package:Smsvis/widgets/quicksendv2/viewContacts.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:toast/toast.dart';
 
 class MessageSend extends StatefulWidget {
   MessageSend({Key key}) : super(key: key);
@@ -41,6 +42,11 @@ class _MessageSend extends State<MessageSend> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Consumer<QuickSendProviderV2>(
       builder: (context, user, child) {
+        if (user.messageSentSuccessfully) {
+          user.messageSentSuccessfully = false;
+          Provider.of<HandleDrawerActivity>(context, listen: false)
+              .fetchCredit();
+        }
         return Scaffold(
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -50,7 +56,12 @@ class _MessageSend extends State<MessageSend> with TickerProviderStateMixin {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                 child: new FloatingActionButton(
-                    backgroundColor: UIColors.orangeJelly,
+                    backgroundColor:
+                        Provider.of<RouteHandler>(context, listen: false)
+                                    .connecitivityResult ==
+                                ConnectivityResult.none
+                            ? Colors.grey
+                            : UIColors.orangeJelly,
                     heroTag: TextData.heroTag[0],
                     child: Icon(
                       Icons.send,
@@ -58,7 +69,13 @@ class _MessageSend extends State<MessageSend> with TickerProviderStateMixin {
                     ),
                     onPressed: () async {
                       await hideKeyboard();
-                      user.validateContainer(context, user);
+                      if (Provider.of<RouteHandler>(context, listen: false)
+                              .connecitivityResult ==
+                          ConnectivityResult.none) {
+                        Toast.show(TextData.noInternetConnection, context);
+                        print(TextData.blacklistedNumbers);
+                      } else
+                        user.validateContainer(context, user);
                     },
                     splashColor: Colors.white),
               ),

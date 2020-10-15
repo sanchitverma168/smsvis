@@ -101,6 +101,7 @@ class API {
             MYURL.summaryReport +
             MYURL.user_id +
             username +
+            MYURL.amperSand +
             MYURL.msg_group +
             msgroupid.toString();
         break;

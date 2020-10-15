@@ -1,4 +1,8 @@
+import 'package:Smsvis/models/api.dart';
+import 'package:Smsvis/models/fetchallsendeerid.dart';
 import 'package:Smsvis/models/quicksendresponse.dart';
+import 'package:Smsvis/utils/enum.dart';
+import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
@@ -37,12 +41,25 @@ class HandleDrawerActivity with ChangeNotifier {
   String get pagetitle => _pagetitle;
 
   String get responsemsg => _errormsg;
-  int _credit = 0;
-  int get credit => _credit;
-  setcredit(value, {bool notify = true}) {
-    _credit = value;
-    if (notify) notifyListeners();
-  }
+
+  /// Get Credit
+  String _credit;
+  // ignore: unnecessary_getters_setters
+  String get credit => _credit;
+  // ignore: unnecessary_getters_setters
+  set credit(String value) => _credit = value;
+
+  String _username;
+  // ignore: unnecessary_getters_setters
+  String get username => _username;
+  // ignore: unnecessary_getters_setters
+  set username(String value) => _username = value;
+
+  bool _creditRequestSent = false;
+  // ignore: unnecessary_getters_setters
+  bool get creditRequestSent => _creditRequestSent;
+  // ignore: unnecessary_getters_setters
+  set creditRequestSent(bool value) => _creditRequestSent = value;
 
   // --------------- start of functions
 
@@ -121,6 +138,28 @@ class HandleDrawerActivity with ChangeNotifier {
   }
 
   updatePage() {
+    notifyListeners();
+  }
+
+  getUsername() async {
+    username = await SharedData().username;
+    fetchCredit();
+  }
+
+  fetchCredit() async {
+    var creditsjson;
+    try {
+      creditsjson =
+          await API().fetchdata(await SharedData().username, TypeData.Credits);
+      _creditRequestSent = true;
+      notifyListeners();
+      credit = creditsFromMap(creditsjson).creditLeft;
+    } catch (e) {
+      print(e.toString() + "On Credits Fetch Api --AndroidDashboardPage");
+      creditsjson = {"credit_left": "0"};
+      credit = creditsFromMap(creditsjson).creditLeft;
+    }
+    _creditRequestSent = false;
     notifyListeners();
   }
 }
