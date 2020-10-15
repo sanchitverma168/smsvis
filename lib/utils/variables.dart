@@ -13,13 +13,6 @@ const getsenderidURL =
     "http://49.50.64.162/sms_app_app/api_senderid.php?user_id=";
 const getcreditsURL =
     "http://49.50.64.162/sms_app_app/credit_left.php?user_id=";
-enum TypeData {
-  SenderID,
-  Credits,
-  DetailMISReport,
-  CurrentMISReport,
-  CurrentMISDisplayReport
-}
 
 /// http://49.50.64.162/sms_app_app/details_sms_misreport.php?user_id=trans_demo&start_date=2020-01-01&end_date=2020-09-15
 const getdetailReport = "sms_app_app/details_sms_misreport.php?";

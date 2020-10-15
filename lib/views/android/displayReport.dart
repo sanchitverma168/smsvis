@@ -5,7 +5,7 @@ import 'package:Smsvis/models/currentdaymisdisplayReport.dart';
 import 'package:Smsvis/providers/currentDayMISDisplayReportProvider.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/utils/stringtext.dart';
-import 'package:Smsvis/utils/variables.dart';
+import 'package:Smsvis/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

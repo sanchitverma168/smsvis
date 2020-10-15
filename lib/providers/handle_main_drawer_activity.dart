@@ -119,4 +119,8 @@ class HandleDrawerActivity with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  updatePage() {
+    notifyListeners();
+  }
 }

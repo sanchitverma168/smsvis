@@ -3,7 +3,7 @@ import 'package:Smsvis/models/api.dart';
 import 'package:Smsvis/models/currentdaymisreport.dart';
 import 'package:Smsvis/providers/currentdaymis.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
-import 'package:Smsvis/utils/variables.dart';
+import 'package:Smsvis/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

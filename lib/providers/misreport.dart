@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:Smsvis/models/api.dart';
 import 'package:Smsvis/models/detail_mis_report.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
-import 'package:Smsvis/utils/variables.dart';
+import 'package:Smsvis/utils/enum.dart';
 import 'package:Smsvis/widgets/detailreport/datatable.dart';
 import 'package:Smsvis/widgets/detailreport/hintTextFirstPage.dart';
 import 'package:Smsvis/widgets/misreport/carddata.dart';

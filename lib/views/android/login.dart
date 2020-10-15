@@ -1,4 +1,6 @@
 import 'package:Smsvis/providers/routehandler.dart';
+import 'package:Smsvis/utils/animation.dart';
+import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/utils/stringtext.dart';
 import 'package:Smsvis/views/android/register.dart';
 import 'package:Smsvis/widgets/loginpage/bezierContainer.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -15,13 +18,24 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final GlobalKey<FormState> _formloginKey = GlobalKey<FormState>();
+  AnimationController helpanimationController;
   bool processing = false;
   @override
   void initState() {
     _askPermissions();
     super.initState();
+    helpanimationController = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    helpanimationController.dispose();
+    super.dispose();
   }
 
   bool isPassword = true;
@@ -50,7 +64,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget progressonlogin() {
-    // if (processing) {
     if (Provider.of<RouteHandler>(context, listen: false)
         .getProcessingonLoginScreen) {
       return Container(
@@ -293,9 +306,65 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: AnimatedBuilder(
+                animation: helpanimationController,
+                builder: (context, child) {
+                  return Container(
+                    color: backgroundOnQuickSendSmsPageHelp.evaluate(
+                      AlwaysStoppedAnimation(
+                        helpanimationController.value,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(TextData.help24x7),
+                        FlatButton(
+                          onPressed: () async {
+                            String url = "tel:" + TextData.helpNumber;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {}
+                          },
+                          child: Row(
+                            children: [
+                              QuickSendIcon(
+                                Icons.call,
+                                iconColor: Colors.white,
+                              ),
+                              Text(
+                                TextData.helpNumber,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
+    );
+  }
+}
+
+class QuickSendIcon extends StatelessWidget {
+  final IconData ic;
+  final Color iconColor;
+  QuickSendIcon(this.ic, {this.iconColor = UIColors.scolor, Key key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 4.0, right: 4.0),
+      child: Icon(ic, color: iconColor),
     );
   }
 }

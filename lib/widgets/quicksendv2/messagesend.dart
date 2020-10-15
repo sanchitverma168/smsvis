@@ -2,6 +2,7 @@ import 'package:Smsvis/providers/quicksendprovider_v2.dart';
 import 'package:Smsvis/utils/animation.dart';
 import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/utils/stringtext.dart';
+import 'package:Smsvis/views/android/login.dart';
 import 'package:Smsvis/widgets/quicksendv2/displayContentdata.dart';
 import 'package:Smsvis/widgets/quicksendv2/error.dart';
 import 'package:Smsvis/widgets/quicksendv2/importContacts.dart';
@@ -29,15 +30,10 @@ class _MessageSend extends State<MessageSend> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    helpanimationController = AnimationController(
-      duration: const Duration(seconds: 5),
-      vsync: this,
-    )..repeat();
   }
 
   @override
   void dispose() {
-    helpanimationController.dispose();
     super.dispose();
   }
 
@@ -51,9 +47,9 @@ class _MessageSend extends State<MessageSend> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               user.showimportbutton == true ? ImportContacts() : SizedBox(),
-              Padding(
-                  padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                  child: new FloatingActionButton(
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                child: new FloatingActionButton(
                     backgroundColor: UIColors.orangeJelly,
                     heroTag: TextData.heroTag[0],
                     child: Icon(
@@ -64,22 +60,57 @@ class _MessageSend extends State<MessageSend> with TickerProviderStateMixin {
                       await hideKeyboard();
                       user.validateContainer(context, user);
                     },
-                    splashColor: Colors.white,
-                  )),
-              new FloatingActionButton(
-                heroTag: TextData.heroTag[1],
-                backgroundColor: Colors.white,
-                onPressed: () {
-                  hideKeyboard();
-                  user.showimportbutton = !user.showimportbutton;
-                },
-                child: user.showimportbutton == true
-                    ? Icon(
-                        Icons.close,
-                        color: UIColors.scolor,
-                      )
-                    : Icon(Icons.add, color: UIColors.scolor),
-                splashColor: Colors.white,
+                    splashColor: Colors.white),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                    child: new FloatingActionButton(
+                      heroTag: TextData.heroTag[4],
+                      backgroundColor: Colors.white,
+                      onPressed: () {},
+                      child: InputChip(
+                        backgroundColor: Colors.white,
+                        label: Icon(
+                          Icons.remove_red_eye,
+                          color: user.viewContactonQuickSendPage == true
+                              ? UIColors.scolor
+                              : Colors.black,
+                        ),
+                        onPressed: () {
+                          if (user.showimportbutton)
+                            user.showimportbutton = !user.showimportbutton;
+                          user.viewContactonQuickSendPage =
+                              !user.viewContactonQuickSendPage;
+                          user.updateScreen();
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                    child: new FloatingActionButton(
+                      heroTag: TextData.heroTag[1],
+                      backgroundColor: Colors.white,
+                      onPressed: () {
+                        hideKeyboard();
+                        user.showimportbutton = !user.showimportbutton;
+                      },
+                      child: user.showimportbutton == true
+                          ? Icon(
+                              Icons.close,
+                              color: UIColors.scolor,
+                            )
+                          : Icon(Icons.add, color: UIColors.scolor),
+                      splashColor: Colors.white,
+                    ),
+                  ),
+                ],
               )
             ],
           ),
@@ -233,97 +264,29 @@ class _MessageSend extends State<MessageSend> with TickerProviderStateMixin {
                                 ],
                               ),
                             ),
-                            Divider(),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: AnimatedBuilder(
-                                    animation: helpanimationController,
-                                    builder: (context, child) {
-                                      return Container(
-                                        color: backgroundOnQuickSendSmsPageHelp
-                                            .evaluate(
-                                          AlwaysStoppedAnimation(
-                                            helpanimationController.value,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(TextData.help24x7),
-                                            FlatButton(
-                                              onPressed: () async {
-                                                String url = "tel:" +
-                                                    TextData.helpNumber;
-                                                if (await canLaunch(url)) {
-                                                  await launch(url);
-                                                } else {}
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  QuickSendIcon(
-                                                    Icons.call,
-                                                    iconColor: Colors.white,
-                                                  ),
-                                                  Text(
-                                                    TextData.helpNumber,
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 2.0),
-                                  child: InputChip(
-                                    backgroundColor: Colors.white,
-                                    label: Icon(
-                                      Icons.remove_red_eye,
-                                      color: user.viewContactonQuickSendPage ==
-                                              true
-                                          ? UIColors.successColor
-                                          : Colors.black,
-                                    ),
-                                    onPressed: () {
-                                      user.viewContactonQuickSendPage =
-                                          !user.viewContactonQuickSendPage;
-                                      user.updateScreen();
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
                           ],
                         ),
                       ),
                     ),
                     if (user.phonenumbersLength != 0 ||
                         user.filenumbersLength != 0)
-                      Row(
-                        children: [
-                          RawChip(
-                            label: Text(TextData.phoneNumber +
-                                user.phonenumbersLength.toString()),
-                          ),
-                          RawChip(
-                            label: Text(TextData.fileNumber +
-                                user.filenumbersLength.toString()),
-                          ),
-                          RawChip(
-                            label: Text(TextData.totalContacts +
-                                (user.phonenumbersLength +
-                                        user.filenumbersLength)
-                                    .toString()),
-                          ),
-                        ],
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            RawChip(
+                                label: Text(TextData.phoneNumber +
+                                    user.phonenumbersLength.toString())),
+                            RawChip(
+                                label: Text(TextData.fileNumber +
+                                    user.filenumbersLength.toString())),
+                            RawChip(
+                                label: Text(TextData.totalContacts +
+                                    (user.phonenumbersLength +
+                                            user.filenumbersLength)
+                                        .toString())),
+                          ],
+                        ),
                       ),
                     if (user.viewContactonQuickSendPage)
                       Row(

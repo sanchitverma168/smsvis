@@ -8,7 +8,7 @@ class MYURL {
   static const String user_id = "user_id=";
   static const String password = "password=";
   static const String amperSand = "&";
-  static const String sender_id = "sender_id";
+  static const String sender_id = "sender_id=";
   static const String number = "number=";
   static const String text = "text=";
 

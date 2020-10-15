@@ -65,13 +65,16 @@ class RouteHandler with ChangeNotifier {
       this.messageLoginScreen = messageLoginScreen;
 
   initAuthProvider() async {
-    _status = await SharedData().islogin()
-        ? await isUsernameandpasswordCorrect()
-            ? Status.Authenticated
-            : Status.Unauthenticated
-        : Status.Unauthenticated;
-    if (!await InternetConnection().isConnected())
+    if (await InternetConnection().isConnected()) {
+      _status = await SharedData().islogin()
+          ? await isUsernameandpasswordCorrect()
+              ? Status.Authenticated
+              : Status.Unauthenticated
+          : Status.Unauthenticated;
+    } else {
       _status = Status.NOINTERNETCONNECTION;
+    }
+
     notifyListeners();
   }
 

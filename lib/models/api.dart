@@ -1,14 +1,11 @@
+import 'package:Smsvis/utils/enum.dart';
 import 'package:Smsvis/utils/network.dart';
 import 'package:Smsvis/utils/urls.dart';
-import 'package:Smsvis/utils/variables.dart';
 
 class API {
   String url;
   Future<dynamic> postmesage(String id, String usermessage, String password,
       String number, String userid) async {
-    // url = "$baseURL" +
-    //     "user_id=$userid&password=$password&sender_id=
-    // $id&number=$number&text=$usermessage";
     url = MYURL.server +
         MYURL.messageSend +
         MYURL.user_id +
@@ -29,7 +26,6 @@ class API {
   }
 
   Future<dynamic> login(String id, String password) async {
-    // url = "$loginURL" + "user_id=$id&password=$password";
     url = MYURL.server +
         MYURL.app +
         MYURL.loginURl +
@@ -43,9 +39,6 @@ class API {
 
   Future<dynamic> register(
       String fullname, String mobile, String email, String location) {
-    // url =
-    //"$server$app$registerURL?user_name=$fullname
-    //&mobile=$mobile&email=$email&location=$location";
     url = MYURL.server +
         MYURL.app +
         MYURL.registerURl +
@@ -64,13 +57,11 @@ class API {
   }
 
   /// [startdate] and [enddate] for detailReport
-  ///
   /// [msgGroupID] for Page DisplayReport in CurrentMISReport Page
   Future<dynamic> fetchdata(String username, TypeData type,
       {String startdate, String enddate, String msgroupid}) {
     switch (type) {
       case TypeData.SenderID:
-        // url = "$getsenderidURL$username";
         url = MYURL.server +
             MYURL.app +
             MYURL.getSenderID +
@@ -78,7 +69,6 @@ class API {
             username;
         break;
       case TypeData.Credits:
-        // url = "$getcreditsURL$username";
         url = MYURL.server +
             MYURL.app +
             MYURL.getCredits +
@@ -86,9 +76,6 @@ class API {
             username;
         break;
       case TypeData.DetailMISReport:
-        // url = server +
-        //     getdetailReport +
-        //     "user_id=$username&start_date=$startdate&end_date=$enddate";
         url = MYURL.server +
             MYURL.app +
             MYURL.detailReport +
@@ -102,7 +89,6 @@ class API {
             enddate;
         break;
       case TypeData.CurrentMISReport:
-        // url = server + getmisReport + "user_id=" + username;
         url = MYURL.server +
             MYURL.app +
             MYURL.misReport +
@@ -110,13 +96,6 @@ class API {
             username;
         break;
       case TypeData.CurrentMISDisplayReport:
-        // url = server +
-        //     app +
-        //     getsummaryReport +
-        //     "user_id=" +
-        //     username +
-        //     "&msg_group=" +
-        //     msgroupid.toString();
         url = MYURL.server +
             MYURL.app +
             MYURL.summaryReport +

@@ -4,7 +4,7 @@ import 'package:Smsvis/providers/detailreport.dart';
 import 'package:Smsvis/providers/misreport.dart';
 import 'package:Smsvis/providers/quicksendprovider_v2.dart';
 import 'package:Smsvis/utils/stringtext.dart';
-import 'package:Smsvis/utils/variables.dart';
+import 'package:Smsvis/utils/enum.dart';
 import 'package:Smsvis/models/fetchallsendeerid.dart';
 import 'package:Smsvis/providers/handle_main_drawer_activity.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';

@@ -4,7 +4,7 @@ import 'package:Smsvis/providers/quicksendprovider_v2.dart';
 import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/utils/sharedpreference.dart';
 import 'package:Smsvis/utils/stringtext.dart';
-import 'package:Smsvis/utils/variables.dart';
+import 'package:Smsvis/utils/enum.dart';
 import 'package:flutter/material.dart';
 
 class FetchingIDAandShowAlertBox extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Smsvis/providers/routehandler.dart';
+import 'package:Smsvis/utils/colors.dart';
 import 'package:Smsvis/utils/stringtext.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +18,7 @@ class _ErrorPageState extends State<ErrorPage> {
   bool showProgress = false;
   Widget progress() {
     return Container(
-      child: CircularProgressIndicator(
-        backgroundColor: Colors.orange,
-      ),
+      child: CircularProgressIndicator(backgroundColor: UIColors.scolor),
     );
   }
 
@@ -32,20 +31,19 @@ class _ErrorPageState extends State<ErrorPage> {
             Text(TextData.noInternetConnection),
             Text(TextData.checkYourInternet),
             OutlineButton(
-              color: Colors.red,
-              onPressed: () {
-                Toast.show(TextData.retrying, context);
-                showProgress = true;
-                Provider.of<RouteHandler>(context, listen: false)
-                    .initAuthProvider();
-                setState(() {});
-                Timer(Duration(seconds: 10), () {
-                  showProgress = false;
+                color: Colors.red,
+                onPressed: () {
+                  Toast.show(TextData.retrying, context);
+                  showProgress = true;
+                  Provider.of<RouteHandler>(context, listen: false)
+                      .initAuthProvider();
                   setState(() {});
-                });
-              },
-              child: Text(TextData.retry),
-            )
+                  Timer(Duration(seconds: 10), () {
+                    showProgress = false;
+                    setState(() {});
+                  });
+                },
+                child: Text(TextData.retry))
           ]),
     );
   }
